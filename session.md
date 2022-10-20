@@ -38,6 +38,12 @@ https://<wallet-url>/ton-connect?
                                  r=<base64urlsafe(InitialRequest)>
 ```
 
+When using the [JS bridge](https://github.com/ton-connect/docs/edit/main/bridge.md#js-bridge), the same request is sent via the `connect()` call:
+
+```
+window.tonconnect.connect(2, <InitialRequest>)
+```
+
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
 
 Parameter **id** specifies app’s Client ID encoded in URL-safe Base64.
