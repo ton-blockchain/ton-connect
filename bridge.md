@@ -10,7 +10,7 @@ Bridge is a transport mechanism to deliver messages from the app to the wallet a
 Bridge comes in two flavors:
 
 - [HTTP Bridge](#http-bridge): for the external apps and services.
-- [JS Bridge](#js-bridge): for dapps opened within the wallet; or when the wallet is a browser extension.
+- [JS Bridge](#js-bridge): for apps opened within the wallet; or when the wallet is a browser extension.
 
 ## HTTP Bridge
 

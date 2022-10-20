@@ -3,7 +3,7 @@
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
 ```tsx
-type DappMessage = InitialRequest | DappRequest;
+type AppMessage = InitialRequest | AppRequest;
 
 type WalletMessage = InitialReply | WalletEvent;
 ```
@@ -99,8 +99,8 @@ The signature must be verified using the public key provided via `get_public_key
 
 ## Messages
 
-- All messages from the dapp to the wallet are requests for an operation.
-- Messages from the wallet to the application can be either responses to dapp requests or events triggered by user actions on the side of the wallet.
+- All messages from the app to the wallet are requests for an operation.
+- Messages from the wallet to the application can be either responses to app requests or events triggered by user actions on the side of the wallet.
 
 **Available operations:**
 
@@ -116,7 +116,7 @@ The signature must be verified using the public key provided via `get_public_key
 All requests have the following structure
 
 ```tsx
-interface DappRequest {
+interface AppRequest {
 	method: string;
 	params: string[];
 	id: string;
@@ -203,7 +203,7 @@ interface SendTransactionResponseError {
 
 Disconnect
 
-The event fires when the user deletes the dapp in the wallet. The dapp must react to the event and delete the saved session. If the user disconnects the wallet on the dapp side, then the event does not fire, and the session information remains in the localstorage
+The event fires when the user deletes the app in the wallet. The app must react to the event and delete the saved session. If the user disconnects the wallet on the app side, then the event does not fire, and the session information remains in the localstorage
 
 ```tsx
 interface DisconnectEvent {
