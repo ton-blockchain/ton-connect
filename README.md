@@ -1,10 +1,6 @@
 # Ton Connect Documentation
 
-Ton Connect enables users to connect a wallet to an app, so they can perform actions in the app while using the wallet as an authentication device.
-
-Ton Connect is designed to **communicate the user’s intent** between apps and wallets. It is not designed to send any other data unrelated to user’s actions: query the blockchain state, forward external events etc.
-
-## SDK
+## Developing a TON app? Use the SDK.
 
 We currently provide JS SDK suitable for web apps.
 
@@ -16,11 +12,13 @@ If you use another language, please take the JS SDK as a reference and implement
 
 ## Protocol specifications
 
+If you implement an SDK, a wallet or want to learn more how Ton Connect works, please read below.
+
 * [Bridge API](https://github.com/ton-connect/docs/blob/main/bridge.md) specifies how the data is transmitted between the app and the wallet. We currently support HTTP and JS APIs. Each wallet manages their own bridge with a compatible app-facing APIs per this specification. Wallet-facing APIs are not mandated by this spec.
 * [Session protocol](session.md) ensures end-to-end encrypted communication over the bridge.
 * [Requests protocol](https://github.com/ton-connect/docs/blob/main/requests-responses.md) defines requests and responses for the app and the wallet.
 
-### Q&A
+## Q&A
 
 #### I am building an HTML/JS app, what should I read?
 
