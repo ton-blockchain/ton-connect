@@ -41,7 +41,7 @@ Bridge buffers messages up to TTL (in secs), but removes them as soon as the rec
 Bridge transfers message `{ from: A, message: Message }` to the client B.
 
 
-## Initial request via the link/QR
+## Universal link
 
 When the app initiates the connection it sends it directly to the wallet via the QR code or a universal link.
 
