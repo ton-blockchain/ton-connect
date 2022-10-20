@@ -79,11 +79,23 @@ If `TonProofItem` is requested, wallet proves ownership of the selected account�
 - Session: wallet’s client ID and app’s client ID.
 - App’s custom payload (where server may put its nonce, cookie id, expiration time).
 
-<aside>
-ℹ️ TODO: we need to SignEd25519(walletprivkey, ”tonconnect.v2/” + addr + “/” + walletclientid + “/” appclientid + “/” + payload) and make sure it does not clash with arbitrary messages to the wallet v3/v4.
-// Need to check what’s up on the latest PR.
+```
+message = "TonProofItemV2/" ++ Address ++ "/" ++ 
+          WalletClientID ++ AppClientID ++ Payload
+signature = Ed25519Sign(privkey, sha256(0xffff ++ "ton-connect" ++ sha256(message)))
+```
 
-</aside>
+where:
+
+* `Address` is the wallet address encoded as (TBD);
+* `WalletClientID` is a 32-byte binary string;
+* `AppClientID` is a 32-byte binary string;
+* `Payload` is a variable-length binary string.
+
+Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
+
+The signature must be verified using the public key provided via `get_public_key` method on smart contract deployed at `Address`.
+
 
 ## Messages
 
