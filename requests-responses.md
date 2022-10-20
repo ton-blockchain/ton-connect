@@ -207,8 +207,7 @@ The event fires when the user deletes the dapp in the wallet. The dapp must reac
 
 ```tsx
 interface DisconnectEvent {
-	"type": "disconnect",
-	"disconnect": {
-	}
+	type: "disconnect",
+	disconnect: { }
 }
 ```
