@@ -38,6 +38,8 @@ request
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
+If the TTL exceeds the hard limit of the bridge server, it should respond with HTTP 400. Bridges should support at least 300 seconds TTL.
+
 Bridge transfers message `{ from: A, message: Message }` to the client B.
 
 
