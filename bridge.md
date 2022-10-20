@@ -44,8 +44,8 @@ When the bridge receives a message `Message` from client `A` addressed to client
 
 ```json
 {
-  "from": "base64_encode(A)",
-  "message": "base64_encode(<Message>)"
+  "from": <base64_encode(A)>,
+  "message": <base64_encode(<Message>)>
 }
 ```
 
