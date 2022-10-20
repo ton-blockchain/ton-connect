@@ -27,7 +27,7 @@
 5. Bridge forwards message to the wallet
 
 
-## Details (using http bridge)
+## Details
 
 ### App initiates connection
 
