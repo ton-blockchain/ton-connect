@@ -1,21 +1,18 @@
 # Bridge API
 
-Bridge is a transport mechanism to deliver messages from the app to the wallet and vice versa. 
+Bridge is a transport mechanism to deliver messages from the app to the wallet and vice versa.
 
-Bridge does not see the contents of the messages (they are end-to-end encrypted). 
-
-Bridge does not distinguish between apps and wallets: communication is fully symmetrical.
-
-Bridge keeps separate queues of messages for each recipient’s **Client ID**. See also Session Protocol (link).
+* **Bridge is maintained by the wallet provider**. App developers do not have to choose or build a bridge. Each wallet’s bridge is listed in the [wallets-list](https://github.com/ton-connect/wallets-list) config.
+* **Messages are end-to-end encrypted.** Bridge does not see the contents or long-term identifiers of the app or wallet.
+* **Communication is symmetrical.** Bridge does not distinguish between apps and wallets: both are simply clients.
+* Bridge keeps separate queues of messages for each recipient’s **Client ID**.
 
 Bridge comes in two flavors:
 
-- **HTTP Bridge** (for the external apps and services)
-- **JS Bridge** (for dapps opened within the wallet or when the wallet is a browser extension).
+- [HTTP Bridge](#http-bridge): for the external apps and services.
+- [JS Bridge](#js-bridge): for dapps opened within the wallet; or when the wallet is a browser extension.
 
-Note: JS bridge runs on the same device as the wallet and the app, so communication is not encrypted.
-
-# HTTP Bridge
+## HTTP Bridge
 
 Client with ID **A** connects to the bridge to listen to incoming requests.
 
@@ -43,13 +40,11 @@ Bridge buffers messages up to TTL (in secs), but removes them as soon as the rec
 
 Bridge transfers message `{ from: A, message: Message }` to the client B.
 
-# JS bridge
+## JS bridge
 
-Used by the embedded apps via the injected binding `window.tonconnect`
+Used by the embedded apps via the injected binding `window.tonconnect`.
 
-```
-window.tonconnect
-```
+JS bridge runs on the same device as the wallet and the app, so communication is not encrypted.
 
 The app works directly with plaintext requests and responses, without session keys and encryption.
 
