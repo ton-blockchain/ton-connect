@@ -14,7 +14,7 @@ If you use another language, please take the JS SDK as a reference and implement
 
 If you implement an SDK, a wallet or want to learn more how Ton Connect works, please read below.
 
-* [Bridge API](https://github.com/ton-connect/docs/blob/main/bridge.md) specifies how the data is transmitted between the app and the wallet. We currently support HTTP and JS APIs. Each wallet manages their own bridge with a compatible app-facing APIs per this specification. Wallet-facing APIs are not mandated by this spec.
+* [Bridge API](https://github.com/ton-connect/docs/blob/main/bridge.md) specifies how the data is transmitted between the app and the wallet.
 * [Session protocol](session.md) ensures end-to-end encrypted communication over the bridge.
 * [Requests protocol](https://github.com/ton-connect/docs/blob/main/requests-responses.md) defines requests and responses for the app and the wallet.
 
