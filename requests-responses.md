@@ -3,9 +3,9 @@
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
 ```tsx
-type AppMessage = InitialRequest | AppRequest;
+type AppSocketMessage = InitialRequest | AppRequest;
 
-type WalletMessage = InitialReply | WalletEvent;
+type WalletSocketMessage = InitialReply | WalletMesage;
 ```
 
 ### Initiating connection
@@ -40,12 +40,12 @@ Wallet responds with **InitialReply** message if the user approves the request.
 type InitialReply = InitialReplyOk | InitialReplyError;
 
 type InitialReplyOk = {
-  name: "init_ok";
+  type: "init_ok";
   items: ConnectItemReply[];
   device: DeviceInfo;
 }
 type InitialReplyError = {
-  name: "init_error";
+  type: "init_error";
   code: number; // 1 = user cancelled; 0 = unknown;
   message: string;
 }
@@ -113,8 +113,7 @@ The signature must be verified using the public key provided via `get_public_key
 
 ### Structure
 
-All requests have the following structure
-
+**All app requests have the following structure (like json-rpc 2.0)**
 ```tsx
 interface AppRequest {
 	method: string;
@@ -122,37 +121,54 @@ interface AppRequest {
 	id: string;
 }
 ```
+Where 
+- method: name of the operation ('sendTransaction', 'singMessage', ...)
+- params: array of the operation specific parameters
+- id: identifier that allows to match requests and responses
 
-Wallet messages are
 
+
+**Wallet messages are operation responses or events.**
 ```tsx
-type WalletEventName = 'disconnect';
+interface WalletMessage {
+	type: WalletEventName | 'response';
+	payload: <json-rpc response or event payload>;
+}
+
+type WalletEventName = 'disconnect' // currently only disconnect event is available
+```
+Where 
+- type: name of the event ('disconnect', ...) or 'response'
+- payload: if type is name of some event then it is specific payload for the event, if type is 'response' it is json-rpc 2.0 response
+
+
+Exactly 
+```tsx
+type WalletMessage = WalletResponse | WalletEvent;
 
 interface WalletEvent {
-	type: WalletEventName | 'response';
-	<event-name>: <event-payload>
+    type: WalletEventName;
+    payload: <event-payload>; // specific payload for each event
+} 
+```
+
+Operation response is object with property `type` equals to `'response'` and property `payload` equals to json-rpc 2.0 response.
+```tsx
+interface WalletResponse {
+    type: 'response';
+    payload: OperationResult; // json-rpc 2.0 response
 }
-```
 
-Exactly
+type OperationResult = OperationResultSuccess | OperationResultError;
 
-```tsx
-type WalletEvent = SendTransactionResponse | DisconnectEvent;
-```
+interface OperationResultSuccess {
+    result: unknown;
+    id: number;
+}
 
-Where response is
-
-```tsx
-interface Response {
-	type: 'response';
-	response: {
-		result: unknown;
-		id: number;
-	} |
-	{
-		error: { code: number; message: string; data?: unknown };
-		id: number;
-	}
+interface OperationResultError {
+    error: { code: number; message: string; data?: unknown };
+    id: number;
 }
 ```
 
@@ -216,8 +232,8 @@ Wallet replies with **SendTransactionResponse**:
 type SendTransactionResponse = SendTransactionResponseSuccess | SendTransactionResponseError; 
 
 interface SendTransactionResponseSuccess {
- type: 'response';
-	response: {
+    type: 'response';
+    payload: {
 		result: <boc>;
 		id: number;
 	}
@@ -225,7 +241,7 @@ interface SendTransactionResponseSuccess {
 
 interface SendTransactionResponseError {
 	type: 'response';
-	response: {
+    payload: {
 		error: { code: 1; message: 'User declined the transaction' };
 		id: number;
 	}
@@ -248,6 +264,6 @@ The event fires when the user deletes the app in the wallet. The app must react 
 ```tsx
 interface DisconnectEvent {
 	type: "disconnect",
-	disconnect: { }
+	payload: { }
 }
 ```
