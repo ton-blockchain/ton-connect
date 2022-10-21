@@ -3,7 +3,7 @@
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
 ```tsx
-type DappMessage = InitialRequest | DappRequest;
+type AppMessage = InitialRequest | AppRequest;
 
 type WalletMessage = InitialReply | WalletEvent;
 ```
@@ -99,8 +99,8 @@ The signature must be verified using the public key provided via `get_public_key
 
 ## Messages
 
-- All messages from the dapp to the wallet are requests for an operation.
-- Messages from the wallet to the application can be either responses to dapp requests or events triggered by user actions on the side of the wallet.
+- All messages from the app to the wallet are requests for an operation.
+- Messages from the wallet to the application can be either responses to app requests or events triggered by user actions on the side of the wallet.
 
 **Available operations:**
 
@@ -116,7 +116,7 @@ The signature must be verified using the public key provided via `get_public_key
 All requests have the following structure
 
 ```tsx
-interface DappRequest {
+interface AppRequest {
 	method: string;
 	params: string[];
 	id: string;
@@ -158,17 +158,57 @@ interface Response {
 
 ### Operations
 
-Sign and send transaction
+<ins>Sign and send transaction</ins>
 
 App sends **SendTransactionRequest**:
 
 ```tsx
 interface SendTransactionRequest {
 	method: 'sendTransaction';
-	params: [<boc>];
+	params: [<transaction-payload>];
 	id: number;
 }
 ```
+
+Where `<transaction-payload>` is JSON with following properties:
+
+* `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
+* `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
+
+Message structure:
+* `address` (string): message destination
+* `amount` (decimal string): number of nanocoins to send.
+* `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
+* `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
+
+<details>
+<summary>Common cases</summary>
+1. No payload, no stateInit: simple transfer without a message.
+2. payload is prefixed with 32 zero bits, no stateInit: simple transfer with a text message.
+3. No payload or prefixed with 32 zero bits; stateInit is present: deployment of the contract.
+</details>
+
+<details>
+<summary>Example</summary>
+
+```json5
+{
+  "valid_until": 1658253458,
+  "messages": [
+    {
+      "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
+      "amount": "20000000",
+      "initState": "base64bocblahblahblah==" //deploy contract
+    },{
+      "address": "0:E69F10CC84877ABF539F83F879291E5CA169451BA7BCE91A37A5CED3AB8080D3",
+      "amount": "60000000",
+      "payload": "base64bocblahblahblah==" //transfer nft to new deployed account 0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F
+    }
+  ]
+}
+```
+</details>
+
 
 Wallet replies with **SendTransactionResponse**:
 
@@ -201,9 +241,9 @@ interface SendTransactionResponseError {
 
 ### Wallet events
 
-Disconnect
+<ins>Disconnect</ins>
 
-The event fires when the user deletes the dapp in the wallet. The dapp must react to the event and delete the saved session. If the user disconnects the wallet on the dapp side, then the event does not fire, and the session information remains in the localstorage
+The event fires when the user deletes the app in the wallet. The app must react to the event and delete the saved session. If the user disconnects the wallet on the app side, then the event does not fire, and the session information remains in the localstorage
 
 ```tsx
 interface DisconnectEvent {
