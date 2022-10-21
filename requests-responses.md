@@ -172,7 +172,6 @@ interface SendTransactionRequest {
 
 Where `<transaction-payload>` is JSON with following properties:
 
-* `source` (string, optional): sender address. Provided in case the source of transaction is important to the dapp. Wallet application must select the appropriate wallet contract to send the message from, or post an error if it does not have the keys to that specific address.
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
 * `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
 
@@ -194,7 +193,6 @@ Message structure:
 
 ```json5
 {
-  "source": "0:E8FA2634A24AEF18ECB5FD4FC71A21B9E95F05768F8D9733C44ED598DB106C4C",
   "valid_until": 1658253458,
   "messages": [
     {
