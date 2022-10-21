@@ -165,10 +165,52 @@ App sends **SendTransactionRequest**:
 ```tsx
 interface SendTransactionRequest {
 	method: 'sendTransaction';
-	params: [<boc>];
+	params: [<transaction-payload>];
 	id: number;
 }
 ```
+
+Where transaction payload is JSON with following properties:
+
+* `source` (string, optional): sender address. Provided in case the source of transaction is important to the dapp. Wallet application must select the appropriate wallet contract to send the message from, or post an error if it does not have the keys to that specific address.
+* `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
+* `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
+
+Message structure:
+* `address` (string): message destination
+* `amount` (decimal string): number of nanocoins to send.
+* `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
+* `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
+
+<details>
+<summary>Common cases</summary>
+1. No `payload`, no `stateInit`: simple transfer without a message.
+2. `payload` is prefixed with 32 zero bits, no `stateInit`: simple transfer with a text message.
+3. No `payload` or prefixed with 32 zero bits; `stateInit` is present: deployment of the contract.
+</details>
+
+<details>
+<summary>Example</summary>
+
+```json5
+{
+  "source": "0:E8FA2634A24AEF18ECB5FD4FC71A21B9E95F05768F8D9733C44ED598DB106C4C",
+  "valid_until": 1658253458,
+  "messages": [
+    {
+      "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
+      "amount": "20000000",
+      "initState": "base64bocblahblahblah==" //deploy contract
+    },{
+      "address": "0:E69F10CC84877ABF539F83F879291E5CA169451BA7BCE91A37A5CED3AB8080D3",
+      "amount": "60000000",
+      "payload": "base64bocblahblahblah==" //transfer nft to new deployed account 0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F
+    }
+  ]
+}
+```
+</details>
+
 
 Wallet replies with **SendTransactionResponse**:
 
