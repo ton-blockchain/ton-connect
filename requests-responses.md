@@ -170,7 +170,7 @@ interface SendTransactionRequest {
 }
 ```
 
-Where transaction payload is JSON with following properties:
+Where `<transaction-payload>` is JSON with following properties:
 
 * `source` (string, optional): sender address. Provided in case the source of transaction is important to the dapp. Wallet application must select the appropriate wallet contract to send the message from, or post an error if it does not have the keys to that specific address.
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
@@ -184,9 +184,9 @@ Message structure:
 
 <details>
 <summary>Common cases</summary>
-1. No `payload`, no `stateInit`: simple transfer without a message.
-2. `payload` is prefixed with 32 zero bits, no `stateInit`: simple transfer with a text message.
-3. No `payload` or prefixed with 32 zero bits; `stateInit` is present: deployment of the contract.
+1. No payload, no stateInit: simple transfer without a message.
+2. payload is prefixed with 32 zero bits, no stateInit: simple transfer with a text message.
+3. No payload or prefixed with 32 zero bits; stateInit is present: deployment of the contract.
 </details>
 
 <details>
