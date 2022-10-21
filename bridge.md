@@ -40,7 +40,19 @@ Bridge buffers messages up to TTL (in secs), but removes them as soon as the rec
 
 If the TTL exceeds the hard limit of the bridge server, it should respond with HTTP 400. Bridges should support at least 300 seconds TTL.
 
-Bridge transfers message `{ from: A, message: Message }` to the client B.
+When the bridge receives a message `Message` from client `A` addressed to client `B`, it generates a message `BridgeMessage`:
+
+```json
+{
+  "from": <base64_encode(A)>,
+  "message": <base64_encode(<Message>)>
+}
+```
+
+and sends it to the client B via SSE connection 
+```js
+resB.write(BridgeMessage)
+```
 
 
 ## Universal link
