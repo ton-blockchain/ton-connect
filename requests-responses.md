@@ -80,14 +80,19 @@ If `TonProofItem` is requested, wallet proves ownership of the selected accountâ
 - Appâ€™s custom payload (where server may put its nonce, cookie id, expiration time).
 
 ```
-message = "TonProofItemV2/" ++ Address ++ "/" ++ 
-          WalletClientID ++ AppClientID ++ Payload
+message = "TonProofItemV2/" ++ 
+          Address ++ 
+          WalletClientID ++ 
+	  AppClientID ++ 
+	  Payload
 signature = Ed25519Sign(privkey, sha256(0xffff ++ "ton-connect" ++ sha256(message)))
 ```
 
 where:
 
-* `Address` is the wallet address encoded as (TBD);
+* `Address` is the wallet address encoded as a sequence: 
+   * workchain: 32-bit signed integer big endian;
+   * hash: 256-bit unsigned integer big endian;
 * `WalletClientID` is a 32-byte binary string;
 * `AppClientID` is a 32-byte binary string;
 * `Payload` is a variable-length binary string.
