@@ -158,7 +158,7 @@ interface Response {
 
 ### Operations
 
-Sign and send transaction
+<ins>Sign and send transaction</ins>
 
 App sends **SendTransactionRequest**:
 
@@ -243,7 +243,7 @@ interface SendTransactionResponseError {
 
 ### Wallet events
 
-Disconnect
+<ins>Disconnect</ins>
 
 The event fires when the user deletes the app in the wallet. The app must react to the event and delete the saved session. If the user disconnects the wallet on the app side, then the event does not fire, and the session information remains in the localstorage
 
