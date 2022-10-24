@@ -3,9 +3,9 @@
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
 ```tsx
-type AppMessage = InitialRequest | AppRequest;
+type AppMessage = ConnectRequest | AppRequest;
 
-type WalletMessage = InitialReply | WalletEvent;
+type WalletMessage = WalletResponse | WalletEvent;
 ```
 
 ### Initiating connection
@@ -13,7 +13,7 @@ type WalletMessage = InitialReply | WalletEvent;
 App’s request message is **InitialRequest**.
 
 ```tsx
-type InitialRequest = {
+type ConnectRequest = {
   name:  string; // app name
   url:   string; // app url
   icon:  string; // app icon url
@@ -34,20 +34,24 @@ type TonProofItem = {
 }
 ```
 
-Wallet responds with **InitialReply** message if the user approves the request. 
+Wallet responds with **ConnectEvent** message if the user approves the request. 
 
 ```tsx
-type InitialReply = InitialReplyOk | InitialReplyError;
+type ConnectEvent = ConnectEventSuccess | ConnectEventError;
 
-type InitialReplyOk = {
-  name: "init_ok";
-  items: ConnectItemReply[];
-  device: DeviceInfo;
+type ConnectEventSuccess = {
+  event: "connect";
+  payload: {
+      items: ConnectItemReply[];
+      device: DeviceInfo;   
+  }
 }
-type InitialReplyError = {
-  name: "init_error";
-  code: number; // 1 = user cancelled; 0 = unknown;
-  message: string;
+type ConnectEventError = {
+  event: "connect_error",
+  payload: {
+      code: number; // 1 = user cancelled; 0 = unknown;
+      message: string;
+  }
 }
 
 type DeviceInfo = {
@@ -114,12 +118,13 @@ The signature must be verified using the public key provided via `get_public_key
 
 **Available events:**
 
+- connect
+- connect_error
 - disconnect
 
 ### Structure
 
-All requests have the following structure
-
+**All app requests have the following structure (like json-rpc 2.0)**
 ```tsx
 interface AppRequest {
 	method: string;
@@ -127,41 +132,41 @@ interface AppRequest {
 	id: string;
 }
 ```
+Where 
+- method: name of the operation ('sendTransaction', 'singMessage', ...)
+- params: array of the operation specific parameters
+- id: identifier that allows to match requests and responses
 
-Wallet messages are
 
+
+**Wallet messages are responses or events.**
+
+Response is an object formatted as a json-rpc 2.0 response. Response `id` must match request's id. 
 ```tsx
-type WalletEventName = 'disconnect';
+type WalletResponse = WalletResponseSuccess | WalletResponseError;
 
+interface WalletResponseSuccess {
+    result: string;
+    id: string;
+}
+
+interface WalletResponseError {
+    error: { code: number; message: string; data?: unknown };
+    id: string;
+}
+```
+
+Event is an object with property `event` that is equal to event's name, and `payload` that contains event additional data. 
+```tsx
 interface WalletEvent {
-	type: WalletEventName | 'response';
-	<event-name>: <event-payload>
+    event: WalletEventName;
+    payload: <event-payload>; // specific payload for each event
 }
+
+type WalletEventName = 'connect' | 'connect_error' | 'disconnect';
 ```
 
-Exactly
-
-```tsx
-type WalletEvent = SendTransactionResponse | DisconnectEvent;
-```
-
-Where response is
-
-```tsx
-interface Response {
-	type: 'response';
-	response: {
-		result: unknown;
-		id: number;
-	} |
-	{
-		error: { code: number; message: string; data?: unknown };
-		id: number;
-	}
-}
-```
-
-### Operations
+### Methods
 
 <ins>Sign and send transaction</ins>
 
@@ -221,19 +226,14 @@ Wallet replies with **SendTransactionResponse**:
 type SendTransactionResponse = SendTransactionResponseSuccess | SendTransactionResponseError; 
 
 interface SendTransactionResponseSuccess {
- type: 'response';
-	response: {
-		result: <boc>;
-		id: number;
-	}
+    result: <boc>;
+    id: string;
+	
 }
 
 interface SendTransactionResponseError {
-	type: 'response';
-	response: {
-		error: { code: 1; message: 'User declined the transaction' };
-		id: number;
-	}
+   error: { code: 1; message: 'User declined the transaction' };
+   id: string;
 }
 ```
 
@@ -253,6 +253,24 @@ The event fires when the user deletes the app in the wallet. The app must react 
 ```tsx
 interface DisconnectEvent {
 	type: "disconnect",
-	disconnect: { }
+	payload: { }
+}
+```
+
+<ins>Connect</ins>
+```tsx
+type ConnectEventSuccess = {
+    event: "connect";
+    payload: {
+        items: ConnectItemReply[];
+        device: DeviceInfo;
+    }
+}
+type ConnectEventError = {
+    event: "connect_error",
+    payload: {
+        code: number; // 1 = user cancelled; 0 = unknown;
+        message: string;
+    }
 }
 ```

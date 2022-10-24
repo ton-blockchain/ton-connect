@@ -87,11 +87,11 @@ The app works directly with plaintext requests and responses, without session ke
 
 ```tsx
 interface TonConnectBridge {
-    deviceInfo(): DeviceInfo; // see Requests/Responses spec
-    protocolVersion(): number; // max supported Ton Connect version (e.g. 2)
-    connect(protocolVersion: number, message: InitialRequest, auto: boolean);
-    send(message: AppRequest);
-    listen((event: WalletResponse) => void);
+    deviceInfo: DeviceInfo; // see Requests/Responses spec
+    protocolVersion: number; // max supported Ton Connect version (e.g. 2)
+    connect(protocolVersion: number, message: InitialRequest, auto: boolean): Promise<InitialReply>;
+    send(message: AppRequest): Promise<WalletResponse>;
+    listen(callback: (event: WalletEvent) => void): void;
 }
 ```
 
@@ -112,10 +112,11 @@ If the app was not previously approved:
 
 #### send()
 
-Sends the message to the bridge, including the InitialRequest (that goes into QR code when using HTTP bridge).
+Sends the message to the bridge, excluding the InitialRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
+Directly returns promise with WalletResponse, do you don't need to wait for responses with `listen`;
 
 #### listen()
 
 Registers a listener for events from the wallet. 
 
-When the connection is being established, or when wallet switches to another account (previously approved), it sends **InitialReply** event with the info about the wallet.
+Currently only `disconnect` event is available. Later there will be a switch account event and other wallet events.
