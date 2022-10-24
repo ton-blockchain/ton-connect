@@ -18,7 +18,7 @@ Client with ID **A** connects to the bridge to listen to incoming requests.
 
 **Client ID is semi-private:** apps and wallets are not supposed to share their IDs with other entities to avoid having their messages removed unexpectedly.
 
-**Each Client ID occupies only one connection.** If multiple wallet instances are connected with the same Client ID, the latest connection takes precedence. We can later add support for multiple instances through a proxy API or via a different bridge logic.
+**Client can subscribe on few Client IDs** - in this case it should enumerate IDs separated with commas. For example: `?client_id=<A1>,<A2>,<A3>`
 
 ```tsx
 request
