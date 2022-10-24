@@ -79,7 +79,7 @@ interface TonConnectBridge {
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     connect(protocolVersion: number, message: InitialRequest, auto: boolean): Promise<InitialReply>;
     send(message: AppRequest): Promise<WalletResponse>;
-    listen((event: WalletEvent) => void): void;
+    listen(callback: (event: WalletEvent) => void): void;
 }
 ```
 
