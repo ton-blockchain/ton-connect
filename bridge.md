@@ -91,7 +91,7 @@ interface TonConnectBridge {
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     connect(protocolVersion: number, message: InitialRequest, auto: boolean): Promise<InitialReply>;
     send(message: AppRequest): Promise<WalletResponse>;
-    listen(callback: (event: WalletEvent) => void): void;
+    listen(callback: (event: WalletEvent) => void): () => void;
 }
 ```
 
@@ -119,4 +119,6 @@ Directly returns promise with WalletResponse, do you don't need to wait for resp
 
 Registers a listener for events from the wallet. 
 
-Currently only `disconnect` event is available. Later there will be a switch account event and other wallet events.
+Returns unsubscribe function.
+
+Currently, only `disconnect` event is available. Later there will be a switch account event and other wallet events.
