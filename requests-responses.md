@@ -65,14 +65,27 @@ type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 type TonAddressItemReply = {
   name: "ton_addr";
   address: string; // TON address raw (`0:<hex>`)
-  network: string; // hex-encoded genesis hash
+  network: NETWORK; // network global_id
 }
 
 type TonProofItemReply = {
   name: "ton_proof";
   signature: string; // base64-encoded signature
 }
+
+enum NETWORK {
+  MAINNET = '-239',
+  TESTNET = '-3'
+}
 ```
+
+**Connect event error codes:**
+
+| code | description                     |
+|------|---------------------------------|
+| 0    | Unknown error                   |
+| 1    | User declined the transaction   |
+| 2    | Auto connect error: unknown app |
 
 ### Address proof signature (`ton_proof`)
 
@@ -239,10 +252,10 @@ interface SendTransactionResponseError {
 
 **Error codes:**
 
-| code | description |
-| --- | --- |
-| 0 | Unknown error |
-| 1 | User declined the transaction |
+| code | description                   |
+|------|-------------------------------|
+| 0    | Unknown error                 |
+| 1    | User declined the transaction |
 
 ### Wallet events
 

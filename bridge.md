@@ -22,7 +22,7 @@ Client with ID **A** connects to the bridge to listen to incoming requests.
 
 ```tsx
 request
-    GET /events?client_id=<A>
+    GET /events?client_id=<to_hex_str(A)>
 
     Accept: text/event-stream
 ```
@@ -31,21 +31,21 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 
 ```tsx
 request
-    POST /message?client_id=<A>?to=<B>&ttl=300
+    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300
 
-    body: Message
+    body: <base64_encode(Message)>
 ```
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
 If the TTL exceeds the hard limit of the bridge server, it should respond with HTTP 400. Bridges should support at least 300 seconds TTL.
 
-When the bridge receives a message `Message` from client `A` addressed to client `B`, it generates a message `BridgeMessage`:
+When the bridge receives a message `base64_encoded_message` from client `A` addressed to client `B`, it generates a message `BridgeMessage`:
 
 ```json
 {
-  "from": <base64_encode(A)>,
-  "message": <base64_encode(<Message>)>
+  "from": <to_hex_str(A)>,
+  "message": <base64_encoded_message>
 }
 ```
 
@@ -62,15 +62,15 @@ When the app initiates the connection it sends it directly to the wallet via the
 ```
 https://<wallet-universal-url>/ton-connect?
                                  v=2&
-                                 id=<base64urlsafe(A)>&
-                                 r=<base64urlsafe(InitialRequest)>
+                                 id=<to_hex_str(A)>&
+                                 r=<base64urlsafe(ConnectRequest)>
 ```
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
 
 Parameter **id** specifies app’s Client ID encoded in URL-safe Base64.
 
-Parameter **r** specifies URL-safe Base64 [InitialRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initial-request).
+Parameter **r** specifies URL-safe Base64 [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md).
 
 The link may be embedded in a QR code or clicked directly.
 
@@ -89,13 +89,14 @@ The app works directly with plaintext requests and responses, without session ke
 interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
-    connect(protocolVersion: number, message: InitialRequest, auto: boolean): Promise<InitialReply>;
+    connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
+    autoConnect(): Promise<ConnectEvent>;
     send(message: AppRequest): Promise<WalletResponse>;
     listen(callback: (event: WalletEvent) => void): () => void;
 }
 ```
 
-Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for **InitialRequest** until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
+Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for **ConnectRequest** until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
 
 SDK around the implements **autoconnect()** and **connect()** as silent and non-silent attempts at establishing the connection.
 
@@ -103,16 +104,18 @@ SDK around the implements **autoconnect()** and **connect()** as silent and non-
 
 Initiates connect request, this is analogous to QR/link when using the HTTP bridge.
 
-If the app was previously approved for the current account — connects silently with InitialReply.
+If the app was previously approved for the current account — connects silently with ConnectEvent.
 
-If the app was not previously approved:
+#### autoConnect()
 
-- `auto == true`: silently ignores this request.
-- `auto == false`: shows confirmation UI. Wallet may bounce repeated requests to prevent DoS.
+Initiates connect request, this is analogous to QR/link when using the HTTP bridge.
+If the app was previously approved for the current account — connects silently with ConnectEvent.
+If the app was not previously approved ignores this request and returns ConnectEventError.
+
 
 #### send()
 
-Sends the message to the bridge, excluding the InitialRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
+Sends the message to the bridge, excluding the ConnectRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
 Directly returns promise with WalletResponse, do you don't need to wait for responses with `listen`;
 
 #### listen()
