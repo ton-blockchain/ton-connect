@@ -81,11 +81,12 @@ enum NETWORK {
 
 **Connect event error codes:**
 
-| code | description                     |
-|------|---------------------------------|
-| 0    | Unknown error                   |
-| 1    | User declined the transaction   |
-| 2    | Auto connect error: unknown app |
+| code | description                  |
+|------|------------------------------|
+| 0    | Unknown error                |
+| 1    | Bad request                  |
+| 100  | Unknown app                  |
+| 300  | User declined the connection |
 
 ### Address proof signature (`ton_proof`)
 
@@ -255,7 +256,10 @@ interface SendTransactionResponseError {
 | code | description                   |
 |------|-------------------------------|
 | 0    | Unknown error                 |
-| 1    | User declined the transaction |
+| 1    | Bad request                   |
+| 100  | Unknown app                   |
+| 300  | User declined the transaction |
+
 
 ### Wallet events
 
