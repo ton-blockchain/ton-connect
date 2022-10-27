@@ -83,6 +83,7 @@ enum NETWORK {
 
 | code | description                     |
 |------|---------------------------------|
+| -1   | Bad request                     |
 | 0    | Unknown error                   |
 | 1    | User declined the transaction   |
 | 2    | Auto connect error: unknown app |
@@ -252,10 +253,12 @@ interface SendTransactionResponseError {
 
 **Error codes:**
 
-| code | description                   |
-|------|-------------------------------|
-| 0    | Unknown error                 |
-| 1    | User declined the transaction |
+| code | description                       |
+|------|-----------------------------------|
+| -1   | Bad request                       |
+| 0    | Unknown error                     |
+| 1    | User declined the transaction     |
+| 2    | Unknown app (Only with js bridge) |
 
 ### Wallet events
 
