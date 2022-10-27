@@ -98,7 +98,7 @@ If `TonProofItem` is requested, wallet proves ownership of the selected accountâ
 - Appâ€™s custom payload (where server may put its nonce, cookie id, expiration time).
 
 ```
-message = "TonProofItemV2/" ++ 
+message = "ton-proof-item-v2/" ++ 
           Address ++ 
           WalletClientID ++ 
 	  AppClientID ++ 
