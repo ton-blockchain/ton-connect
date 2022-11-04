@@ -49,7 +49,7 @@ type ConnectEventSuccess = {
 type ConnectEventError = {
   event: "connect_error",
   payload: {
-      code: number; // 1 = user cancelled; 0 = unknown;
+      code: number;
       message: string;
   }
 }

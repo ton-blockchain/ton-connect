@@ -36,7 +36,7 @@ request
     Accept: text/event-stream
 ```
 
-**lastEventId** – is eventId of last event wallet got over bridge. In this case wallet will fetch all the events wich happened after last connection.
+**lastEventId** – is eventId of last SSE event wallet got over bridge. In this case wallet will fetch all the events which happened after last connection.
 
 Sending message from client A to client B. Bridge returns error if ttl is too high.
 
@@ -101,7 +101,7 @@ interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
-    autoConnect(): Promise<ConnectEvent>;
+    restoreConnection(): Promise<ConnectEvent>;
     send(message: AppRequest): Promise<WalletResponse>;
     listen(callback: (event: WalletEvent) => void): () => void;
 }
@@ -117,11 +117,15 @@ Initiates connect request, this is analogous to QR/link when using the HTTP brid
 
 If the app was previously approved for the current account — connects silently with ConnectEvent.
 
-#### autoConnect()
+#### restoreConnection()
 
-Initiates connect request, this is analogous to QR/link when using the HTTP bridge.
-If the app was previously approved for the current account — connects silently with ConnectEvent.
-If the app was not previously approved ignores this request and returns ConnectEventError.
+Sends reconnection request. 
+
+If the app was previously approved for the current account — connects silently with previous `ConnectEvent` (may include ton_proof).
+
+Else if the app was not previously approved but app with same domain name was (via http bridge) — connects silently with `ConnectEvent` excluding `ton_proof`.
+
+Else returns `ConnectEventError` with error code 300.
 
 
 #### send()
@@ -136,3 +140,9 @@ Registers a listener for events from the wallet.
 Returns unsubscribe function.
 
 Currently, only `disconnect` event is available. Later there will be a switch account event and other wallet events.
+
+#### disconnect()
+
+Must be called when user clicks "Disconnect button" in the app. Allows the wallet to update its interface to the disconnected state.
+
+After `disconnect()` has been called, the wallet will remove permissions to current account for the app. 
