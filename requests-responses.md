@@ -114,7 +114,7 @@ where:
    * hash: 256-bit unsigned integer big endian;
 * `AppDomain` is Length ++ EncodedDomainName
   - `Length` is 32-bit value of utf-8 encoded app domain name length
-  - `EncodedDomainName` id `Length`-bit  utf-8 encoded app domain name
+  - `EncodedDomainName` id `Length`-byte  utf-8 encoded app domain name
 * `Timestamp` 64-bit unix epoch time of the signing operation 
 * `Payload` is a variable-length binary string.
 
