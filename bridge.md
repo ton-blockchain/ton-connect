@@ -27,6 +27,17 @@ request
     Accept: text/event-stream
 ```
 
+**Subscribing to the bridge second (any other) time**
+
+```tsx
+request
+    GET /events?client_id=<to_hex_str(A)>&last-event-id=<lastEventId>
+
+    Accept: text/event-stream
+```
+
+**lastEventId** – is eventId of last event wallet got over bridge. In this case wallet will fetch all the events wich happened after last connection.
+
 Sending message from client A to client B. Bridge returns error if ttl is too high.
 
 ```tsx
@@ -42,7 +53,7 @@ If the TTL exceeds the hard limit of the bridge server, it should respond with H
 
 When the bridge receives a message `base64_encoded_message` from client `A` addressed to client `B`, it generates a message `BridgeMessage`:
 
-```json
+```js
 {
   "from": <to_hex_str(A)>,
   "message": <base64_encoded_message>
