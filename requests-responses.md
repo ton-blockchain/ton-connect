@@ -94,16 +94,17 @@ If `TonProofItem` is requested, wallet proves ownership of the selected account�
 
 - Unique prefix to separate messages from on-chain messages. (`ton-connect`)
 - Wallet address.
-- Session: wallet’s client ID and app’s client ID.
+- App domain
+- Signing timestamp
 - App’s custom payload (where server may put its nonce, cookie id, expiration time).
 
 ```
-message = "ton-proof-item-v2/" ++ 
-          Address ++ 
-          WalletClientID ++ 
-	  AppClientID ++ 
-	  Payload
-signature = Ed25519Sign(privkey, sha256(0xffff ++ "ton-connect" ++ sha256(message)))
+message = utf8_encode("ton-proof-item-v2/") ++ 
+          Address ++
+          AppDomain ++
+          Timestamp ++  
+	      Payload 
+signature = Ed25519Sign(privkey, sha256(0xffff ++ utf8_encode("ton-connect") ++ sha256(message)))
 ```
 
 where:
@@ -111,8 +112,10 @@ where:
 * `Address` is the wallet address encoded as a sequence: 
    * workchain: 32-bit signed integer big endian;
    * hash: 256-bit unsigned integer big endian;
-* `WalletClientID` is a 32-byte binary string;
-* `AppClientID` is a 32-byte binary string;
+* `AppDomain` is Length ++ EncodedDomainName
+  - `Length` is 32-bit value of utf-8 encoded app domain name length
+  - `EncodedDomainName` id `Length`-bit  utf-8 encoded app domain name
+* `Timestamp` 64-bit unix epoch time of the signing operation 
 * `Payload` is a variable-length binary string.
 
 Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
