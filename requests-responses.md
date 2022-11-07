@@ -49,7 +49,7 @@ type ConnectEventSuccess = {
 type ConnectEventError = {
   event: "connect_error",
   payload: {
-      code: number; // 1 = user cancelled; 0 = unknown;
+      code: number;
       message: string;
   }
 }
@@ -70,7 +70,12 @@ type TonAddressItemReply = {
 
 type TonProofItemReply = {
   name: "ton_proof";
-  signature: string; // base64-encoded signature
+  proof: {
+    timestamp: string; // 64-bit unix epoch time of the signing operation 
+    domain: string;  // base64-encoded AppDomain
+    signature: string; // base64-encoded signature
+    payload: string; // payload from the request
+  }
 }
 
 enum NETWORK {
