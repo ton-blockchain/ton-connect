@@ -121,7 +121,7 @@ If the app was previously approved for the current account — connects silently
 
 #### restoreConnection()
 
-Sends reconnection request. 
+Attempts to restore the previous connection. 
 
 If the app was previously approved for the current account — connects silently with previous `ConnectEvent` (may include ton_proof).
 
