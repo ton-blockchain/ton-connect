@@ -36,7 +36,7 @@ request
     Accept: text/event-stream
 ```
 
-**lastEventId** – is eventId of last SSE event wallet got over bridge. In this case wallet will fetch all the events which happened after last connection.
+**lastEventId** – the eventId of the last SSE event wallet got over the bridge. In this case wallet will fetch all the events which happened after the last connection.
 
 Sending message from client A to client B. Bridge returns error if ttl is too high.
 
