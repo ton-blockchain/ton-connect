@@ -73,7 +73,8 @@ type TonProofItemReply = {
   proof: {
     timestamp: string; // 64-bit unix epoch time of the signing operation 
     domain: string;  // base64-encoded AppDomain
-    signature: string; // base64-encoded signature   
+    signature: string; // base64-encoded signature
+    payload: string; // payload from the request
   }
 }
 
