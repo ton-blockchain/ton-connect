@@ -102,6 +102,7 @@ The app works directly with plaintext requests and responses, without session ke
 interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
+    isWalletBrowser: boolean; // if the page is opened into wallet's browser
     connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
     restoreConnection(): Promise<ConnectEvent>;
     send(message: AppRequest): Promise<WalletResponse>;
