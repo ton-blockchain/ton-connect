@@ -123,7 +123,7 @@ If the app was previously approved for the current account — connects silently
 
 Attempts to restore the previous connection. 
 
-If the app was previously approved for the current account — connects silently with previous `ConnectEvent` (may include ton_proof).
+If the app was previously approved for the current account — connects silently with the new `ConnectEvent` with only a `ton_addr` data item.
 
 Else if the app was not previously approved but app with same domain name was (via http bridge) — connects silently with `ConnectEvent` excluding `ton_proof`.
 
