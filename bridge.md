@@ -90,7 +90,9 @@ The initial request is unencrypted because (1) there is no personal data being c
 
 ## JS bridge
 
-Used by the embedded apps via the injected binding `window.tonconnect`.
+Used by the embedded apps via the injected binding `window.<app-name>.tonconnect`.
+
+`app-name` must be specified in the [wallets list](https://github.com/ton-connect/wallets-list)
 
 JS bridge runs on the same device as the wallet and the app, so communication is not encrypted.
 
