@@ -127,7 +127,7 @@ If the app was previously approved for the current account — connects silently
 
 Else if the app was not previously approved but app with same domain name was (via http bridge) — connects silently with `ConnectEvent` excluding `ton_proof`.
 
-Else returns `ConnectEventError` with error code 300.
+Otherwise returns `ConnectEventError` with error code 300.
 
 
 #### send()
