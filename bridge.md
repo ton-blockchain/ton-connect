@@ -31,7 +31,7 @@ request
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>&last-event-id=<lastEventId>
+    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>
 
     Accept: text/event-stream
 ```
