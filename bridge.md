@@ -146,4 +146,4 @@ Currently, only `disconnect` event is available. Later there will be a switch ac
 
 Must be called when the user clicks "Disconnect" in the app. Allows the wallet to update its interface to the disconnected state.
 
-After `disconnect()` has been called, the wallet will remove permissions to current account for the app. 
+After `disconnect()` has been called, the wallet removes the dapp from the list of dapps.
