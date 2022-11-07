@@ -71,7 +71,7 @@ type TonAddressItemReply = {
 type TonProofItemReply = {
   name: "ton_proof";
   proof: {
-    timaestamp: string; // 64-bit unix epoch time of the signing operation 
+    timestamp: string; // 64-bit unix epoch time of the signing operation 
     domain: string;  // base64-encoded domain
     signature: string; // base64-encoded signature   
   }
