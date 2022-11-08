@@ -71,10 +71,10 @@ resB.write(BridgeMessage)
 When the app initiates the connection it sends it directly to the wallet via the QR code or a universal link.
 
 ```
-https://<wallet-universal-url>/ton-connect?
-                                 v=2&
-                                 id=<to_hex_str(A)>&
-                                 r=<base64urlsafe(ConnectRequest)>
+https://<wallet-universal-url>?
+                               v=2&
+                               id=<to_hex_str(A)>&
+                               r=<base64urlsafe(ConnectRequest)>
 ```
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
