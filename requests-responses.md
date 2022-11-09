@@ -72,7 +72,10 @@ type TonProofItemReply = {
   name: "ton_proof";
   proof: {
     timestamp: string; // 64-bit unix epoch time of the signing operation 
-    domain: string;  // base64-encoded AppDomain
+    domain: {
+      lengthBytes: number; // AppDomain Length
+      value: string;  // app domain name (as url part, without encoding) 
+    };
     signature: string; // base64-encoded signature
     payload: string; // payload from the request
   }
@@ -108,7 +111,7 @@ message = utf8_encode("ton-proof-item-v2/") ++
           Address ++
           AppDomain ++
           Timestamp ++  
-	      Payload 
+          Payload 
 signature = Ed25519Sign(privkey, sha256(0xffff ++ utf8_encode("ton-connect") ++ sha256(message)))
 ```
 
