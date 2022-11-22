@@ -5,7 +5,7 @@
 We currently provide JS SDK suitable for web apps.
 
 * [Ton Connect JS](https://github.com/ton-connect/sdk)
-* [Getting Started](#TBD) (TBD)
+* [Getting Started](https://github.com/ton-connect/sdk/tree/main/packages/sdk)
 * Demo app: [deployed app](https://ton-connect.github.io/demo-dapp/) | [source code](https://github.com/ton-connect/demo-dapp)
 
 If you use another language, please take the JS SDK as a reference and implement your own wrapper. Let us know about your work — we'd be happy to list it here.
