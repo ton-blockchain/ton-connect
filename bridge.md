@@ -81,7 +81,7 @@ Parameter **v** specifies the protocol version. Unsupported versions are not acc
 
 Parameter **id** specifies app’s Client ID encoded in URL-safe Base64.
 
-Parameter **r** specifies URL-safe Base64 [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md).
+Parameter **r** specifies URL-safe Base64 [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
 The link may be embedded in a QR code or clicked directly.
 
