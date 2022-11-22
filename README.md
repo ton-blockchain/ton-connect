@@ -37,6 +37,10 @@ JS SDK does that for you; just get wallets list `connector.getWallets()` and che
 
 Like with embedded apps (see above), JS SDK detects it for you via `injected` property of the corresponding `connector.getWallets()` list item. If you build your own SDK you should check that `window.[targetWalletJsBridgeKey].tonconnect` exists.
 
+#### How to implement backand authorization with tonconnect?
+
+[See an example of dapp-backand](https://github.com/ton-connect/demo-dapp-backend)
+
 #### How do I make my own bridge? 
 
 You don’t need to, unless you are building a wallet.
