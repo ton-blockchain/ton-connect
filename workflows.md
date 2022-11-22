@@ -15,8 +15,8 @@
 3. User opens the wallet, the wallet connects to the bridge using stored connection info
 
 ### First-time connection via js bridge
-1. App checks existing of the `window.tonconnect`
-2. App calls `window.tonconnect.connect()` and waits for a response
+1. App checks existing of the `window.[walletJsBridgeKey].tonconnect`
+2. App calls `window.[walletJsBridgeKey].tonconnect.connect()` and waits for a response
 4. Wallet sends account information to the app;
 
 ###  Making ordinary requests and responses
@@ -47,10 +47,10 @@ App creates a [universal link](https://github.com/ton-connect/docs/blob/main/bri
 https://<wallet-url>/ton-connect?v=2&id=<base64urlsafe(A)>&r=<base64urlsafe(InitialRequest)>
 ```
 
-When using the [JS bridge](https://github.com/ton-connect/docs/edit/main/bridge.md#js-bridge), the same request is sent via the `connect()` call:
+When using the [JS bridge](https://github.com/ton-connect/docs/blob/main/bridge.md#js-bridge), the same request is sent via the `connect()` call:
 
 ```
-window.tonconnect.connect(2, <InitialRequest>)
+window.[walletJsBridgeKey].tonconnect.connect(2, <InitialRequest>)
 ```
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
