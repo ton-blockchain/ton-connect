@@ -71,7 +71,7 @@ Wallet opens up a link or QR code, reads plaintext app’s **Client ID** (A from
 
 Wallet computes the **InitialResponse**.
 
-Wallet generates its own [Client Keypair](#client-keypair) (b,B) and stores alongside app’s info and ID.
+Wallet generates its own [Client Keypair](https://nacl.cr.yp.to/box.html) (b,B) (Public and private 32-byte keys generated using Crypto Box API in NaCl) and stores alongside app’s info and ID.
 
 Wallet encrypts the response and sends it to the **Bridge** using app’s Client ID A.
 
