@@ -59,11 +59,11 @@ type DeviceInfo = {
   appName:      string; // e.g. "Tonkeeper"  
   appVersion:  string; // e.g. "2.3.367"
   maximumSupportedProtocolVersion: number;
-  supportedInterfaces: FeatureInterface[]; // must list all supported interfaces corresponding supported RPC methods.
-                                           // Currently there is only one interface -- 'SendTransaction'; 
+  supportedFeatures: Feature[]; // list of supported features and methods in RPC
+                                // Currently there is only one interface -- 'SendTransaction'; 
 }
 
-type FeatureInterface = 'SendTransaction';
+type Feature = 'SendTransaction';
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
