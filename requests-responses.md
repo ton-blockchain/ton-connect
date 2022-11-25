@@ -56,9 +56,9 @@ type ConnectEventError = {
 
 type DeviceInfo = {
   platform: "iphone" | "ipad" | "android" | "windows" | "mac" | "linux";
-  app:      string; // e.g. "Tonkeeper"  
-  version:  string; // e.g. "2.3.367"
-  supportedTonConnectVersion: number;
+  appName:      string; // e.g. "Tonkeeper"  
+  appVersion:  string; // e.g. "2.3.367"
+  maximumSupportedProtocolVersion: number;
   supportedInterfaces: FeatureInterface[]; // must list all supported interfaces corresponding supported RPC methods.
                                            // Currently there is only one interface -- 'SendTransaction'; 
 }
