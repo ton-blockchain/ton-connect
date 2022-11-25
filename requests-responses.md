@@ -58,6 +58,7 @@ type DeviceInfo = {
   platform: "iphone" | "ipad" | "android" | "windows" | "mac" | "linux";
   app:      string; // e.g. "Tonkeeper"  
   version:  string; // e.g. "2.3.367"
+  supportedTonConnectVersion: number;
   supportedInterfaces: FeatureInterface[]; // must list all supported interfaces corresponding supported RPC methods.
                                            // Currently there is only one interface -- 'SendTransaction'; 
 }
