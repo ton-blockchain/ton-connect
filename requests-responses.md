@@ -58,7 +58,11 @@ type DeviceInfo = {
   platform: "iphone" | "ipad" | "android" | "windows" | "mac" | "linux";
   app:      string; // e.g. "Tonkeeper"  
   version:  string; // e.g. "2.3.367"
+  supportedInterfaces: FeatureInterface[]; // must list all supported interfaces corresponding supported RPC methods.
+                                           // Currently there is only one interface -- 'SendTransaction'; 
 }
+
+type FeatureInterface = 'SendTransaction';
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
@@ -68,7 +72,9 @@ type TonAddressItemReply = {
   network: NETWORK; // network global_id
 }
 
-type TonProofItemReply = {
+type TonProofItemReply = TonProofItemReplySuccess | TonProofItemReplyError;
+
+type TonProofItemReplySuccess = {
   name: "ton_proof";
   proof: {
     timestamp: string; // 64-bit unix epoch time of the signing operation (seconds)
@@ -78,6 +84,14 @@ type TonProofItemReply = {
     };
     signature: string; // base64-encoded signature
     payload: string; // payload from the request
+  }
+}
+
+type TonProofItemReplyError = {
+  name: "ton_addr";
+  error: {
+      code: ConnectItemErrorCode;
+      message?: string;
   }
 }
 
@@ -95,6 +109,25 @@ enum NETWORK {
 | 1    | Bad request                  |
 | 100  | Unknown app                  |
 | 300  | User declined the connection |
+
+**Connect item error codes:**
+
+| code | description                  |
+|------|------------------------------|
+| 0    | Unknown error                |
+| 400  | Method is not supported      |
+
+If wallet doesn't support requested ConnectItem (e.g. "ton_proof"), it must send reply for this ConnectItem -- ConnectItemReply 
+with following structure: 
+```ts
+type ConnectItemReplyError = {
+  name: "<requested-connect-item-name>";
+  error: {
+      code: 400;
+      message?: string;
+  }
+}
+```
 
 ### Address proof signature (`ton_proof`)
 
@@ -270,6 +303,7 @@ interface SendTransactionResponseError {
 | 1    | Bad request                   |
 | 100  | Unknown app                   |
 | 300  | User declined the transaction |
+| 400  | Method is not supported       |
 
 
 ### Wallet events
