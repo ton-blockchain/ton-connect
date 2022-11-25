@@ -60,7 +60,7 @@ type DeviceInfo = {
   appVersion:  string; // e.g. "2.3.367"
   maximumSupportedProtocolVersion: number;
   supportedFeatures: Feature[]; // list of supported features and methods in RPC
-                                // Currently there is only one interface -- 'SendTransaction'; 
+                                // Currently there is only one feature -- 'SendTransaction'; 
 }
 
 type Feature = 'SendTransaction';
