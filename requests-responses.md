@@ -304,7 +304,7 @@ interface SendTransactionResponseError {
 | 1    | Bad request                   |
 | 100  | Unknown app                   |
 | 300  | User declined the transaction |
-| 400  | Method is not supported       |
+| 400  | Method not supported       |
 
 
 ### Wallet events
