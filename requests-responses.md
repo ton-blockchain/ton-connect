@@ -118,7 +118,7 @@ enum NETWORK {
 | 0    | Unknown error                |
 | 400  | Method is not supported      |
 
-If wallet doesn't support requested ConnectItem (e.g. "ton_proof"), it must send reply for this ConnectItem -- ConnectItemReply 
+If the wallet doesn't support the requested `ConnectItem` (e.g. "ton_proof"), it must send reply with the following ConnectItemReply corresponding to the requested item.
 with following structure: 
 ```ts
 type ConnectItemReplyError = {
