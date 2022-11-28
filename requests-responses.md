@@ -59,7 +59,7 @@ type DeviceInfo = {
   appName:      string; // e.g. "Tonkeeper"  
   appVersion:  string; // e.g. "2.3.367"
   maximumSupportedProtocolVersion: number;
-  supportedFeatures: Feature[]; // list of supported features and methods in RPC
+  features: Feature[]; // list of supported features and methods in RPC
                                 // Currently there is only one feature -- 'SendTransaction'; 
 }
 
