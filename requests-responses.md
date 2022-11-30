@@ -108,6 +108,8 @@ enum NETWORK {
 |------|------------------------------|
 | 0    | Unknown error                |
 | 1    | Bad request                  |
+| 2    | App manifest not found       |
+| 3    | App manifest content error   |
 | 100  | Unknown app                  |
 | 300  | User declined the connection |
 
