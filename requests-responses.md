@@ -314,7 +314,7 @@ interface SendTransactionResponseSuccess {
 }
 
 interface SendTransactionResponseError {
-   error: { code: 1; message: 'User declined the transaction' };
+   error: { code: number; message: string };
    id: string;
 }
 ```
@@ -355,7 +355,7 @@ type ConnectEventSuccess = {
 type ConnectEventError = {
     event: "connect_error",
     payload: {
-        code: number; // 1 = user cancelled; 0 = unknown;
+        code: number;
         message: string;
     }
 }
