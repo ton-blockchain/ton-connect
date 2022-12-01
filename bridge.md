@@ -79,7 +79,7 @@ https://<wallet-universal-url>?
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
 
-Parameter **id** specifies app’s Client ID encoded in URL-safe Base64.
+Parameter **id** specifies app’s Client ID encoded as hex (without '0x' prefix).
 
 Parameter **r** specifies URL-safe Base64 [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
