@@ -44,7 +44,7 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 request
     POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300
 
-    body: <base64_encode(Message)>
+    body: <base64_encoded_message>
 ```
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
@@ -92,7 +92,7 @@ The initial request is unencrypted because (1) there is no personal data being c
 
 Used by the embedded apps via the injected binding `window.<wallet-js-bridge-key>.tonconnect`.
 
-`app-name` must be specified in the [wallets list](https://github.com/ton-connect/wallets-list)
+`wallet-js-bridge-key` must be specified in the [wallets list](https://github.com/ton-connect/wallets-list)
 
 JS bridge runs on the same device as the wallet and the app, so communication is not encrypted.
 
@@ -110,7 +110,7 @@ interface TonConnectBridge {
 }
 ```
 
-Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for **ConnectRequest** until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
+Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection) until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
 
 SDK around the implements **autoconnect()** and **connect()** as silent and non-silent attempts at establishing the connection.
 
@@ -118,7 +118,9 @@ SDK around the implements **autoconnect()** and **connect()** as silent and non-
 
 Initiates connect request, this is analogous to QR/link when using the HTTP bridge.
 
-If the app was previously approved for the current account — connects silently with ConnectEvent.
+If the app was previously approved for the current account — connects silently with ConnectEvent. Otherwise shows confirmation dialog to the user.
+
+You shouldn't use the `connect` method without explicit user action (e.g. connect button click). If you want automatically try to restore previous connection, you should use the `restoreConnection` method.
 
 #### restoreConnection()
 
@@ -127,12 +129,12 @@ Attempts to restore the previous connection.
 If the app was previously approved for the current account — connects silently with the new `ConnectEvent` with only a `ton_addr` data item.
 
 
-Otherwise returns `ConnectEventError` with error code 300.
+Otherwise returns `ConnectEventError` with error code 100 (Unknown app).
 
 
 #### send()
 
-Sends the message to the bridge, excluding the ConnectRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
+Sends a [message](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages) to the bridge, excluding the ConnectRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
 Directly returns promise with WalletResponse, do you don't need to wait for responses with `listen`;
 
 #### listen()
@@ -145,6 +147,6 @@ Currently, only `disconnect` event is available. Later there will be a switch ac
 
 #### disconnect()
 
-Must be called when the user clicks "Disconnect" in the app. Allows the wallet to update its interface to the disconnected state.
+Should be called when the user clicks "Disconnect" in the app. Allows the wallet to update its interface to the disconnected state.
 
 After `disconnect()` has been called, the wallet removes the dapp from the list of dapps.
