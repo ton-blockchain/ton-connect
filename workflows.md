@@ -44,7 +44,7 @@ App generates the **InitialRequest**. See [requests spec](requests-responses.md)
 App creates a [universal link](https://github.com/ton-connect/docs/blob/main/bridge.md#universal-link) to a target wallet:
 
 ```
-https://<wallet-url>/ton-connect?v=2&id=<base64urlsafe(A)>&r=<base64urlsafe(InitialRequest)>
+https://<wallet-universal-url>?v=2&id=<base64urlsafe(A)>&r=<base64urlsafe(InitialRequest)>
 ```
 
 When using the [JS bridge](https://github.com/ton-connect/docs/blob/main/bridge.md#js-bridge), the same request is sent via the `connect()` call:
