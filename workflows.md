@@ -91,7 +91,7 @@ The session is considered established in the app when it has the wallet’s ID a
 
 When the user performs an action in the app, it may request confirmation from the wallet.
 
-App generates [request](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages).
+App generates a [request](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages).
 
 App encrypts it to the wallet’s key B (see below).
 
