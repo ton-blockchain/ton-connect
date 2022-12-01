@@ -67,9 +67,9 @@ App is not yet in the connected state, and may restart the whole process at any 
 
 ### Wallet establishes connection
 
-Wallet opens up a link or QR code, reads plaintext app’s **Client ID** (A from parameter “**id”**) and **InitialRequest** (from parameter **“r”**).
+Wallet opens up a link or QR code, reads plaintext app’s **Client ID** (A from parameter “**id”**) and [InitialRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection) (from parameter **“r”**).
 
-Wallet computes the **InitialResponse**.
+Wallet computes the [InitialResponse](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
 Wallet generates its own [Client Keypair](https://github.com/ton-connect/docs/blob/main/session.md#client-keypair) (b,B) and stores alongside app’s info and ID.
 
@@ -81,7 +81,7 @@ Wallet connects to the bridge (link to bridge api) and listens for events using 
 
 App receives the event from the bridge that contains the encrypted message from the Client ID **B.**
 
-App decrypts the message and parses it as **InitialReply** (link to Requests/Responses spec).
+App decrypts the message and parses it as [InitialResponse](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
 If the reply is valid, App reads wallet info (address, proof of ownership etc.) and remembers the wallet’s ID **B**.
 
@@ -91,11 +91,11 @@ The session is considered established in the app when it has the wallet’s ID a
 
 When the user performs an action in the app, it may request confirmation from the wallet.
 
-App generates request (see Requests/Responses spec).
+App generates [request](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages).
 
 App encrypts it to the wallet’s key B (see below).
 
-App sends the encrypted message to B over the **Bridge**.
+App sends the encrypted message to B over the [Bridge](https://github.com/ton-connect/docs/blob/main/bridge.md).
 
 App shows “pending confirmation” UI to let user know to open the wallet.
 
@@ -103,7 +103,6 @@ Wallet receives the encrypted message through the Bridge.
 
 Wallet decrypts the message and is now assured that it came from the app with ID **A.**
 
-Wallet shows the confirmation dialog to the user, signs transaction and replies over the bridge with user’s decision: “Ok, sent” or “User cancelled”.
+Wallet shows the confirmation dialog to the user, signs transaction and [replies](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages) over the bridge with user’s decision: “Ok, sent” or “User cancelled”.
 
 App receives the encrypted message, decrypts it and closes the “pending confirmation” UI.
-
