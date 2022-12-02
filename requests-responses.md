@@ -98,7 +98,7 @@ type TonAddressItemReply = {
   }
 }
 
-type WalletContractVersion = 'v3r1' | 'v3r2' | 'v4r1' | 'v4r1'; 
+type WalletContractVersion = 'v3r1' | 'v3r2' | 'v4r1' | 'v4r2'; 
 
 type TonProofItemReply = TonProofItemReplySuccess | TonProofItemReplyError;
 
