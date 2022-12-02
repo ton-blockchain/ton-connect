@@ -92,10 +92,7 @@ type TonAddressItemReply = {
   name: "ton_addr";
   address: string; // TON address raw (`0:<hex>`)
   network: NETWORK; // network global_id
-  walletContract: {
-      version: WalletContractVersion;
-      stateInit: string; // Base64 (not url safe) encoded state init 
-  }
+  walletContractStateInit: string; // Base64 (not url safe) encoded state init
 }
 
 type WalletContractVersion = 'v3r1' | 'v3r2' | 'v4r1' | 'v4r2'; 
