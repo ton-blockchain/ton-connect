@@ -44,7 +44,7 @@ App generates the **InitialRequest**. See [requests spec](requests-responses.md)
 App creates a [universal link](https://github.com/ton-connect/docs/blob/main/bridge.md#universal-link) to a target wallet:
 
 ```
-https://<wallet-universal-url>?v=2&id=<base64urlsafe(A)>&r=<base64urlsafe(InitialRequest)>
+https://<wallet-universal-url>?v=2&id=<to_hex_str(A)>&r=<urlsafe(json.stringify(ConnectRequest))>
 ```
 
 When using the [JS bridge](https://github.com/ton-connect/docs/blob/main/bridge.md#js-bridge), the same request is sent via the `connect()` call:
@@ -57,7 +57,7 @@ Parameter **v** specifies the protocol version. Unsupported versions are not acc
 
 Parameter **id** specifies app’s Client ID encoded as hex (without '0x' prefix).
 
-Parameter **r** specifies URL-safe Base64 **InitialRequest**.
+Parameter **r** specifies URL-safe json [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
 The link may be embedded in a QR code or clicked directly.
 
