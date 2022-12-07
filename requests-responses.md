@@ -92,6 +92,7 @@ type TonAddressItemReply = {
   name: "ton_addr";
   address: string; // TON address raw (`0:<hex>`)
   network: NETWORK; // network global_id
+  walletStateInit: string; // Base64 (not url safe) encoded stateinit cell for the wallet contract
 }
 
 type TonProofItemReply = TonProofItemReplySuccess | TonProofItemReplyError;
