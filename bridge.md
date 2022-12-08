@@ -74,14 +74,14 @@ When the app initiates the connection it sends it directly to the wallet via the
 https://<wallet-universal-url>?
                                v=2&
                                id=<to_hex_str(A)>&
-                               r=<base64urlsafe(ConnectRequest)>
+                               r=<urlsafe(json.stringify(ConnectRequest))>
 ```
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
 
 Parameter **id** specifies app’s Client ID encoded as hex (without '0x' prefix).
 
-Parameter **r** specifies URL-safe Base64 [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
+Parameter **r** specifies URL-safe json [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
 
 The link may be embedded in a QR code or clicked directly.
 
