@@ -38,7 +38,7 @@ App’s request message is **InitialRequest**.
 ```tsx
 type ConnectRequest = {
   manifestUrl: string;
-  returnStrategy: 'default' | 'disabled' | '<my-return-url>';
+  return: 'back' | 'none' | '<my-return-url>';
   items: ConnectItem[], // data items to share with the app
 }
 
@@ -58,7 +58,7 @@ type TonProofItem = {
 
 ConnectRequest description:
 - manifestUrl: link to the app's tonconnect-manifest.json
-- returnStrategy: return strategy for deeplinks when user signs/declines the request. 'default' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'disabled' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'default' strategy OS bugs.       
+- return: return strategy for deeplinks when user signs/declines the request. 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'none' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'back' strategy OS bugs.       
 - items: data items to share with the app
 Wallet responds with **ConnectEvent** message if the user approves the request. 
 
@@ -217,14 +217,14 @@ The signature must be verified using the public key provided via `get_public_key
 interface AppRequest {
 	method: string;
 	params: string[];
-    returnStrategy: 'default' | 'disabled' | '<my-return-url>';
+    return: 'back' | 'none' | '<my-return-url>';
 	id: string;
 }
 ```
 Where 
 - method: name of the operation ('sendTransaction', 'singMessage', ...)
 - params: array of the operation specific parameters
-- returnStrategy: return strategy for deeplinks when user signs/declines the request. 'default' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'disabled' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'default' strategy OS bugs.
+- return: return strategy for deeplinks when user signs/declines the request. 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'none' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'back' strategy OS bugs.
 - id: identifier that allows to match requests and responses
 
 
@@ -266,7 +266,7 @@ App sends **SendTransactionRequest**:
 interface SendTransactionRequest {
 	method: 'sendTransaction';
 	params: [<transaction-payload>];
-    returnStrategy: 'default' | 'disabled' | '<my-return-url>';
+    return: 'back' | 'none' | '<my-return-url>';
 	id: number;
 }
 ```
