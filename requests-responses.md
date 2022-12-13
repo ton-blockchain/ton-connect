@@ -11,7 +11,7 @@ type WalletMessage = WalletResponse | WalletEvent;
 ### App manifest
 App needs to have its manifest to pass meta information to the wallet. Manifest is a JSON file named as `tonconnect-manifest.json` following format:
 
-```json
+```js
 {
   "url": "<app-url>",                        // required
   "name": "<app-name>",                      // required
