@@ -24,7 +24,7 @@
 2. App generates request and sends it to the bridge
 3. Bridge forwards message to the wallet
 4. Wallet generates response and sends it to the bridge
-5. Bridge forwards message to the wallet
+5. Bridge forwards message to the app
 
 
 ## Details
