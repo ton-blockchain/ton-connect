@@ -269,7 +269,7 @@ App sends **SendTransactionRequest**:
 interface SendTransactionRequest {
 	method: 'sendTransaction';
 	params: [<transaction-payload>];
-	return: 'back' | 'none' | '<my-return-url>';
+    return: 'back' | 'none' | '<my-return-url>';
 	id: number;
 }
 ```
