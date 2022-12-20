@@ -11,7 +11,7 @@ type WalletMessage = WalletResponse | WalletEvent;
 ### App manifest
 App needs to have its manifest to pass meta information to the wallet. Manifest is a JSON file named as `tonconnect-manifest.json` following format:
 
-```js
+```json
 {
   "url": "<app-url>",                        // required
   "name": "<app-name>",                      // required
@@ -57,12 +57,12 @@ type TonProofItem = {
 ```
 
 ConnectRequest description:
-- `manifestUrl`: link to the app's tonconnect-manifest.json
-- `return`: return strategy for deeplinks when the user accepts or declines the request. 
-  * `'back'` means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
-  * `'none'` means no jumps after user action;
+- manifestUrl: link to the app's tonconnect-manifest.json
+- return: return strategy for deeplinks when user signs/declines the request. 
+  * 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
+  * 'none' means no jumps after user action;
   * a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
-- `items`: data items to share with the app.
+- items: data items to share with the app
 Wallet responds with **ConnectEvent** message if the user approves the request. 
 
 ```tsx
@@ -184,8 +184,8 @@ signature = Ed25519Sign(privkey, sha256(0xffff ++ utf8_encode("ton-connect") ++ 
 where:
 
 * `Address` is the wallet address encoded as a sequence: 
-   * `workchain`: 32-bit signed integer big endian;
-   * `hash`: 256-bit unsigned integer big endian;
+   * workchain: 32-bit signed integer big endian;
+   * hash: 256-bit unsigned integer big endian;
 * `AppDomain` is Length ++ EncodedDomainName
   - `Length` is 32-bit value of utf-8 encoded app domain name length in bytes
   - `EncodedDomainName` id `Length`-byte  utf-8 encoded app domain name
@@ -225,13 +225,10 @@ interface AppRequest {
 }
 ```
 Where 
-- `method`: name of the operation ('sendTransaction', 'singMessage', ...)
-- `params`: array of the operation specific parameters
-- `return`: return strategy for deeplinks when the user accepts or declines the request. 
-  * `'back'` means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
-  * `'none'` means no jumps after user action;
-  * a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
-- `id`: identifier that allows to match requests and responses
+- method: name of the operation ('sendTransaction', 'singMessage', ...)
+- params: array of the operation specific parameters
+- return: return strategy for deeplinks when user signs/declines the request. 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'none' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'back' strategy OS bugs.
+- id: identifier that allows to match requests and responses
 
 
 
@@ -305,7 +302,7 @@ Message structure:
     {
       "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
       "amount": "20000000",
-      "stateInit": "base64bocblahblahblah==" //deploy contract
+      "initState": "base64bocblahblahblah==" //deploy contract
     },{
       "address": "0:E69F10CC84877ABF539F83F879291E5CA169451BA7BCE91A37A5CED3AB8080D3",
       "amount": "60000000",
