@@ -38,7 +38,6 @@ App’s request message is **InitialRequest**.
 ```tsx
 type ConnectRequest = {
   manifestUrl: string;
-  returnStrategy: 'default' | 'disabled' | '<my-return-url>';
   items: ConnectItem[], // data items to share with the app
 }
 
@@ -57,9 +56,9 @@ type TonProofItem = {
 ```
 
 ConnectRequest description:
-- manifestUrl: link to the app's tonconnect-manifest.json
-- returnStrategy: return strategy for deeplinks when user signs/declines the request. 'default' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'disabled' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'default' strategy OS bugs.       
-- items: data items to share with the app
+- `manifestUrl`: link to the app's tonconnect-manifest.json
+- `items`: data items to share with the app.
+
 Wallet responds with **ConnectEvent** message if the user approves the request. 
 
 ```tsx
@@ -181,8 +180,8 @@ signature = Ed25519Sign(privkey, sha256(0xffff ++ utf8_encode("ton-connect") ++ 
 where:
 
 * `Address` is the wallet address encoded as a sequence: 
-   * workchain: 32-bit signed integer big endian;
-   * hash: 256-bit unsigned integer big endian;
+   * `workchain`: 32-bit signed integer big endian;
+   * `hash`: 256-bit unsigned integer big endian;
 * `AppDomain` is Length ++ EncodedDomainName
   - `Length` is 32-bit value of utf-8 encoded app domain name length in bytes
   - `EncodedDomainName` id `Length`-byte  utf-8 encoded app domain name
@@ -217,15 +216,13 @@ The signature must be verified using the public key provided via `get_public_key
 interface AppRequest {
 	method: string;
 	params: string[];
-    returnStrategy: 'default' | 'disabled' | '<my-return-url>';
 	id: string;
 }
 ```
 Where 
-- method: name of the operation ('sendTransaction', 'singMessage', ...)
-- params: array of the operation specific parameters
-- returnStrategy: return strategy for deeplinks when user signs/declines the request. 'default' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'disabled' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'default' strategy OS bugs.
-- id: identifier that allows to match requests and responses
+- `method`: name of the operation ('sendTransaction', 'singMessage', ...)
+- `params`: array of the operation specific parameters
+- `id`: identifier that allows to match requests and responses
 
 
 
@@ -266,7 +263,6 @@ App sends **SendTransactionRequest**:
 interface SendTransactionRequest {
 	method: 'sendTransaction';
 	params: [<transaction-payload>];
-    returnStrategy: 'default' | 'disabled' | '<my-return-url>';
 	id: number;
 }
 ```
@@ -299,7 +295,7 @@ Message structure:
     {
       "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
       "amount": "20000000",
-      "initState": "base64bocblahblahblah==" //deploy contract
+      "stateInit": "base64bocblahblahblah==" //deploy contract
     },{
       "address": "0:E69F10CC84877ABF539F83F879291E5CA169451BA7BCE91A37A5CED3AB8080D3",
       "amount": "60000000",
