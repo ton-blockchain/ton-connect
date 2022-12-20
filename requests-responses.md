@@ -217,7 +217,7 @@ The signature must be verified using the public key provided via `get_public_key
 interface AppRequest {
 	method: string;
 	params: string[];
-	return: 'back' | 'none' | '<my-return-url>';
+    return: 'back' | 'none' | '<my-return-url>';
 	id: string;
 }
 ```
