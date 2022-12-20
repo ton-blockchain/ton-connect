@@ -58,10 +58,7 @@ type TonProofItem = {
 
 ConnectRequest description:
 - manifestUrl: link to the app's tonconnect-manifest.json
-- return: return strategy for deeplinks when user signs/declines the request. 
-  * 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
-  * 'none' means no jumps after user action;
-  * a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
+- return: return strategy for deeplinks when user signs/declines the request. 'back' means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 'none' means no jumps after user action. If a specific url is passed, wallet will open this url deeplink after user's action. Note, that you shouldn't pass your app url if it is a webpage. This option should be used for native apps to prevent 'back' strategy OS bugs.       
 - items: data items to share with the app
 Wallet responds with **ConnectEvent** message if the user approves the request. 
 
