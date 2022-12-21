@@ -74,7 +74,8 @@ When the app initiates the connection it sends it directly to the wallet via the
 https://<wallet-universal-url>?
                                v=2&
                                id=<to_hex_str(A)>&
-                               r=<urlsafe(json.stringify(ConnectRequest))>
+                               r=<urlsafe(json.stringify(ConnectRequest))>&
+                               ret=back
 ```
 
 Parameter **v** specifies the protocol version. Unsupported versions are not accepted by the wallets.
@@ -82,6 +83,17 @@ Parameter **v** specifies the protocol version. Unsupported versions are not acc
 Parameter **id** specifies app’s Client ID encoded as hex (without '0x' prefix).
 
 Parameter **r** specifies URL-safe json [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
+
+Parameter **ret** (optional) specifies return strategy for the deeplink when user signs/declines the request.
+- 'back' (default) means return to the app which initialized deeplink jump (e.g. browser, native app, ...),
+- 'none' means no jumps after user action;
+- a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
+
+`ret` parameter should be supported for empty deeplinks -- it might be used to specify the wallet behavior after other actions confirmation (send transaction, sign raw, ...).
+```
+https://<wallet-universal-url>?ret=back
+```
+
 
 The link may be embedded in a QR code or clicked directly.
 

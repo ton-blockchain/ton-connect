@@ -11,7 +11,7 @@ type WalletMessage = WalletResponse | WalletEvent;
 ### App manifest
 App needs to have its manifest to pass meta information to the wallet. Manifest is a JSON file named as `tonconnect-manifest.json` following format:
 
-```js
+```json
 {
   "url": "<app-url>",                        // required
   "name": "<app-name>",                      // required
@@ -38,7 +38,6 @@ App’s request message is **InitialRequest**.
 ```tsx
 type ConnectRequest = {
   manifestUrl: string;
-  return: 'back' | 'none' | '<my-return-url>';
   items: ConnectItem[], // data items to share with the app
 }
 
@@ -58,11 +57,8 @@ type TonProofItem = {
 
 ConnectRequest description:
 - `manifestUrl`: link to the app's tonconnect-manifest.json
-- `return`: return strategy for deeplinks when the user accepts or declines the request. 
-  * `'back'` means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
-  * `'none'` means no jumps after user action;
-  * a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
 - `items`: data items to share with the app.
+
 Wallet responds with **ConnectEvent** message if the user approves the request. 
 
 ```tsx
@@ -220,17 +216,12 @@ The signature must be verified using the public key provided via `get_public_key
 interface AppRequest {
 	method: string;
 	params: string[];
-	return: 'back' | 'none' | '<my-return-url>';
 	id: string;
 }
 ```
 Where 
 - `method`: name of the operation ('sendTransaction', 'singMessage', ...)
 - `params`: array of the operation specific parameters
-- `return`: return strategy for deeplinks when the user accepts or declines the request. 
-  * `'back'` means return to the app which initialized deeplink jump (e.g. browser, native app, ...), 
-  * `'none'` means no jumps after user action;
-  * a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
 - `id`: identifier that allows to match requests and responses
 
 
@@ -272,7 +263,6 @@ App sends **SendTransactionRequest**:
 interface SendTransactionRequest {
 	method: 'sendTransaction';
 	params: [<transaction-payload>];
-	return: 'back' | 'none' | '<my-return-url>';
 	id: number;
 }
 ```
