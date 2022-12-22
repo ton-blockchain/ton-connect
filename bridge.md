@@ -65,6 +65,11 @@ and sends it to the client B via SSE connection
 resB.write(BridgeMessage)
 ```
 
+### Heartbeat
+
+To keep the connection, bridge server should periodically send a "heartbeat" message to the SSE channel. Client should ignore such messages.
+So, the bridge heartbeat message is a string with word `heartbeat`.
+
 
 ## Universal link
 
