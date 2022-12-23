@@ -201,7 +201,7 @@ The signature must be verified using the public key provided via `get_public_key
 **Available operations:**
 
 - sendTransaction
-- singMessage (will be implemented later)
+- signMessage (will be implemented later)
 
 **Available events:**
 
@@ -220,7 +220,7 @@ interface AppRequest {
 }
 ```
 Where 
-- `method`: name of the operation ('sendTransaction', 'singMessage', ...)
+- `method`: name of the operation ('sendTransaction', 'signMessage', ...)
 - `params`: array of the operation specific parameters
 - `id`: identifier that allows to match requests and responses
 
