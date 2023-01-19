@@ -88,7 +88,7 @@ type DeviceInfo = {
                                 // Currently there is only one feature -- 'SendTransaction'; 
 }
 
-type Feature = 'SendTransaction';
+type Feature = 'SendTransaction' | 'SignCell';
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
@@ -201,7 +201,7 @@ The signature must be verified using the public key provided via `get_public_key
 **Available operations:**
 
 - sendTransaction
-- signMessage (will be implemented later)
+- signCell
 
 **Available events:**
 
@@ -255,7 +255,7 @@ type WalletEventName = 'connect' | 'connect_error' | 'disconnect';
 
 ### Methods
 
-<ins>Sign and send transaction</ins>
+#### Sign and send transaction
 
 App sends **SendTransactionRequest**:
 
@@ -333,6 +333,63 @@ interface SendTransactionResponseError {
 | 100  | Unknown app                   |
 | 300  | User declined the transaction |
 | 400  | Method not supported       |
+
+
+#### Sign cell
+
+App sends **SignCellRequest**:
+
+```tsx
+interface SignCellRequest {
+	method: 'signCell';
+	params: [<sign-cell-payload>];
+	id: number;
+}
+```
+
+Where `<sign-cell-payload>` is JSON with following properties:
+
+* `schema_crc` (integer): indicates the layout of payload cell that in turn defines domain separation.
+* `cell` (string, base64 encoded Cell): contains arbitrary data per its TL-B definition.
+
+The signature will be computed in the following way:
+`ed25519(uint32be(schema_crc) ++ uint64be(timestamp) ++ cell_hash(X), privkey)`
+
+[See details](https://github.com/oleganza/TEPs/blob/datasig/text/0000-data-signatures.md)
+
+Wallet should decode the cell in accordance with the schema_crc and show corresponding data to the user.
+If the schema_crc is unknown to the wallet, the wallet should show danger notification/UI to the user.  
+
+Wallet replies with **SignCellResponse**:
+
+```tsx
+type SignCellResponse = SignCellResponseSuccess | SignCellResponseError; 
+
+interface SignCellResponseSuccess {
+    result: {
+      signature: string; // base64 encoded signature 
+      timestamp: string; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
+    };
+    id: string;
+}
+
+interface SignCellResponseError {
+   error: { code: number; message: string };
+   id: string;
+}
+```
+
+**Error codes:**
+
+| code | description               |
+|------|---------------------------|
+| 0    | Unknown error             |
+| 1    | Bad request               |
+| 100  | Unknown app               |
+| 300  | User declined the request |
+| 400  | Method not supported      |
+
+
 
 
 ### Wallet events
