@@ -88,7 +88,7 @@ type DeviceInfo = {
                                 // Currently there is only one feature -- 'SendTransaction'; 
 }
 
-type Feature = 'SendTransaction' | 'SignCell';
+type Feature = 'SendTransaction' | 'SignData';
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
@@ -201,7 +201,7 @@ The signature must be verified using the public key provided via `get_public_key
 **Available operations:**
 
 - sendTransaction
-- signCell
+- signData
 
 **Available events:**
 
@@ -335,19 +335,19 @@ interface SendTransactionResponseError {
 | 400  | Method not supported       |
 
 
-#### Sign cell
+#### Sign Data
 
-App sends **SignCellRequest**:
+App sends **SignDataRequest**:
 
 ```tsx
-interface SignCellRequest {
-	method: 'signCell';
-	params: [<sign-cell-payload>];
+interface SignDataRequest {
+	method: 'signData';
+	params: [<sign-data-payload>];
 	id: number;
 }
 ```
 
-Where `<sign-cell-payload>` is JSON with following properties:
+Where `<sign-data-payload>` is JSON with following properties:
 
 * `schema_crc` (integer): indicates the layout of payload cell that in turn defines domain separation.
 * `cell` (string, base64 encoded Cell): contains arbitrary data per its TL-B definition.
@@ -360,12 +360,12 @@ The signature will be computed in the following way:
 Wallet should decode the cell in accordance with the schema_crc and show corresponding data to the user.
 If the schema_crc is unknown to the wallet, the wallet should show danger notification/UI to the user.  
 
-Wallet replies with **SignCellResponse**:
+Wallet replies with **SignDataResponse**:
 
 ```tsx
-type SignCellResponse = SignCellResponseSuccess | SignCellResponseError; 
+type SignDataResponse = SignDataResponseSuccess | SignDataResponseError; 
 
-interface SignCellResponseSuccess {
+interface SignDataResponseSuccess {
     result: {
       signature: string; // base64 encoded signature 
       timestamp: string; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
@@ -373,7 +373,7 @@ interface SignCellResponseSuccess {
     id: string;
 }
 
-interface SignCellResponseError {
+interface SignDataResponseError {
    error: { code: number; message: string };
    id: string;
 }
