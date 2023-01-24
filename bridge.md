@@ -104,6 +104,23 @@ The link may be embedded in a QR code or clicked directly.
 
 The initial request is unencrypted because (1) there is no personal data being communicated yet, (2) app does not even know the identity of the wallet.
 
+### Unified universal link
+In addition to its own universal link, the wallet must support the unified universal link.
+
+This allows applications to create a single qr code, which can be used to connect to any wallet.
+
+More specifically, the wallet must support `https://connect.ton.org` universal link as well as its own <wallet-universal-url>.
+
+Therefore, the following `connect request` must be processed by the wallet:
+
+```
+https://connect.ton.org?
+                       v=2&
+                       id=<to_hex_str(A)>&
+                       r=<urlsafe(json.stringify(ConnectRequest))>&
+                       ret=back
+```
+
 
 ## JS bridge
 
