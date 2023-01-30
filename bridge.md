@@ -44,8 +44,13 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 request
     POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300
 
-    body: <base64_encoded_message>
+    BODY {
+        message: <base64_encoded_message>,
+        topic: <"sendTransaction" or "signData">
+    }
 ```
+
+The `topic` parameter can be used by the bridge to deliver the push notification to the wallet. The parameter must correspond to the RPC method called inside the encrypted `message`.
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
