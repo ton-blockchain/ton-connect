@@ -243,16 +243,18 @@ interface WalletResponseError {
 }
 ```
 
-Event is an object with property `event` that is equal to event's name, `id` that is sequential event counter within a session (**not** related to `request.id` because there is no request for an event), and `payload` that contains event additional data. 
+Event is an object with property `event` that is equal to event's name, `id` that is sequential event counter (**not** related to `request.id` because there is no request for an event), and `payload` that contains event additional data. 
 ```tsx
 interface WalletEvent {
     event: WalletEventName;
-    id: string; // sequential event counter within a session
+    id: number; // sequential event counter
     payload: <event-payload>; // specific payload for each event
 }
 
 type WalletEventName = 'connect' | 'connect_error' | 'disconnect';
 ```
+
+Wallet must increment `id` while generating a new event. (Every next event must have `id` > previous event `id`)
 
 DApp will not accept any event with an id that matches the id of one of the previous events in this session. 
 
@@ -404,7 +406,7 @@ The event fires when the user deletes the app in the wallet. The app must react 
 ```tsx
 interface DisconnectEvent {
 	type: "disconnect",
-    id: string; // sequential event counter within a session
+	id: number; // sequential event counter
 	payload: { }
 }
 ```
@@ -413,7 +415,7 @@ interface DisconnectEvent {
 ```tsx
 type ConnectEventSuccess = {
     event: "connect";
-    id: string; // sequential event counter within a session
+    id: number; // sequential event counter
     payload: {
         items: ConnectItemReply[];
         device: DeviceInfo;
@@ -421,7 +423,7 @@ type ConnectEventSuccess = {
 }
 type ConnectEventError = {
     event: "connect_error",
-    id: string; // sequential event counter within a session
+    id: number; // sequential event counter
     payload: {
         code: number;
         message: string;
