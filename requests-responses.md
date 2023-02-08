@@ -202,6 +202,7 @@ The signature must be verified using the public key provided via `get_public_key
 
 - sendTransaction
 - signData
+- disconnect
 
 **Available events:**
 
@@ -263,7 +264,7 @@ App sends **SendTransactionRequest**:
 interface SendTransactionRequest {
 	method: 'sendTransaction';
 	params: [<transaction-payload>];
-	id: number;
+	id: string;
 }
 ```
 
@@ -343,7 +344,7 @@ App sends **SignDataRequest**:
 interface SignDataRequest {
 	method: 'signData';
 	params: [<sign-data-payload>];
-	id: number;
+	id: string;
 }
 ```
 
@@ -390,6 +391,43 @@ interface SignDataResponseError {
 | 400  | Method not supported      |
 
 
+#### Disconnect operation
+When user disconnects the wallet in the dApp, dApp should inform the wallet to help the wallet save resources and delete unnecessary session.
+
+```tsx
+interface DisconnectRequest {
+	method: 'disconnect';
+	params: [];
+	id: string;
+}
+```
+
+Wallet replies with **DisconnectResponse**:
+
+```ts
+type DisconnectResponse = DisconnectResponseSuccess | DisconnectResponseError; 
+
+interface DisconnectResponseSuccess {
+    id: string;
+    result: { };
+}
+
+interface DisconnectResponseError {
+   error: { code: number; message: string };
+   id: string;
+}
+```
+
+Wallet **shouldn't** emit a 'Disconnect' event if disconnect was initialized by the dApp. 
+
+**Error codes:**
+
+| code | description               |
+|------|---------------------------|
+| 0    | Unknown error             |
+| 1    | Bad request               |
+| 100  | Unknown app               |
+| 400  | Method not supported      |
 
 
 ### Wallet events
