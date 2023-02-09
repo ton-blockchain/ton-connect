@@ -393,6 +393,7 @@ interface SignDataResponseError {
 
 #### Disconnect operation
 When user disconnects the wallet in the dApp, dApp should inform the wallet to help the wallet save resources and delete unnecessary session.
+Allows the wallet to update its interface to the disconnected state.
 
 ```tsx
 interface DisconnectRequest {
