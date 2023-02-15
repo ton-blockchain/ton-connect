@@ -268,7 +268,7 @@ App sends **SendTransactionRequest**:
 ```tsx
 interface SendTransactionRequest {
 	method: 'sendTransaction';
-	params: [<transaction-payload>];
+	params: [<transaction-payload>, <(optional) account>];
 	id: string;
 }
 ```
@@ -279,7 +279,7 @@ Where `<transaction-payload>` is JSON with following properties:
 * `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
 
 Message structure:
-* `address` (string): message destination
+* `address` (string): message destination, format '<wc>:<hex>'
 * `amount` (decimal string): number of nanocoins to send.
 * `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
@@ -312,6 +312,17 @@ Message structure:
 ```
 </details>
 
+Optional second parameter `<account>` can be used to specify the account to which the request should be applied. This can be useful for multi-account dApps.
+
+More specifically, it is a JSON with following properties:
+* `address` (string): address to which the request should be applied, format '<wc>:<hex>'
+* `network` (string): network `global_id` ('-239' for the mainnet and '-3' for the testnet)
+
+DApp must have permissions to send a request for the specified address (the corresponding wallet account must be connected to the dApp).
+
+The wallet should show a warning if the user has a network or address selected that differs from those specified in the request.
+
+
 
 Wallet replies with **SendTransactionResponse**:
 
@@ -338,7 +349,7 @@ interface SendTransactionResponseError {
 | 1    | Bad request                   |
 | 100  | Unknown app                   |
 | 300  | User declined the transaction |
-| 400  | Method not supported       |
+| 400  | Method not supported          |
 
 
 #### Sign Data
@@ -348,7 +359,7 @@ App sends **SignDataRequest**:
 ```tsx
 interface SignDataRequest {
 	method: 'signData';
-	params: [<sign-data-payload>];
+	params: [<sign-data-payload>, , <(optional) address>];
 	id: string;
 }
 ```
@@ -365,6 +376,14 @@ The signature will be computed in the following way:
 
 Wallet should decode the cell in accordance with the schema_crc and show corresponding data to the user.
 If the schema_crc is unknown to the wallet, the wallet should show danger notification/UI to the user.  
+
+
+Optional second parameter `<address>` (string, format '<wc>:<hex>') can be used to specify the address to which the request should be applied. This can be useful for multi-account dApps.
+
+DApp must have permissions to send a request for the specified address (the corresponding wallet account must be connected to the dApp).
+
+The wallet should show a warning if the user has an address selected that differs from those specified in the request.
+
 
 Wallet replies with **SignDataResponse**:
 
