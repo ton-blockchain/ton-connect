@@ -66,6 +66,7 @@ type ConnectEvent = ConnectEventSuccess | ConnectEventError;
 
 type ConnectEventSuccess = {
   event: "connect";
+  id: number; // sequential event counter
   payload: {
       items: ConnectItemReply[];
       device: DeviceInfo;   
@@ -73,6 +74,7 @@ type ConnectEventSuccess = {
 }
 type ConnectEventError = {
   event: "connect_error",
+  id: number; // sequential event counter
   payload: {
       code: number;
       message: string;
