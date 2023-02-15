@@ -138,6 +138,7 @@ The app works directly with plaintext requests and responses, without session ke
 ```tsx
 interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
+    walletInfo?: WalletInfo;
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     isWalletBrowser: boolean; // if the page is opened into wallet's browser
     connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
@@ -150,6 +151,24 @@ interface TonConnectBridge {
 Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection) until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
 
 SDK around the implements **autoconnect()** and **connect()** as silent and non-silent attempts at establishing the connection.
+
+#### walletInfo (optional)
+Represents wallet metadata. Might be defined to make an injectable wallet works with TonConnect even if the wallet is not listed in the [wallets-list.json](https://github.com/ton-connect/wallets-list).
+
+Wallet metadata format:
+```ts
+interface WalletInfo {
+    name: string;
+    image: <png image url>;
+    tondns?:  string;
+    about_url: <about page url>;
+}
+```
+
+Detailed properties description: https://github.com/ton-connect/wallets-list#entry-format.
+
+If `TonConnectBridge.walletInfo` is defined and the wallet is listed in the [wallets-list.json](https://github.com/ton-connect/wallets-list), `TonConnectBridge.walletInfo` properties will override corresponding wallet properties from the wallets-list.json. 
+
 
 #### connect()
 
