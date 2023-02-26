@@ -66,7 +66,7 @@ type ConnectEvent = ConnectEventSuccess | ConnectEventError;
 
 type ConnectEventSuccess = {
   event: "connect";
-  id: number; // sequential event counter
+  id: number; // increasing event counter
   payload: {
       items: ConnectItemReply[];
       device: DeviceInfo;   
@@ -74,7 +74,7 @@ type ConnectEventSuccess = {
 }
 type ConnectEventError = {
   event: "connect_error",
-  id: number; // sequential event counter
+  id: number; // increasing event counter
   payload: {
       code: number;
       message: string;
@@ -98,6 +98,7 @@ type TonAddressItemReply = {
   name: "ton_addr";
   address: string; // TON address raw (`0:<hex>`)
   network: NETWORK; // network global_id
+  publicKey: string; // HEX string without 0x
   walletStateInit: string; // Base64 (not url safe) encoded stateinit cell for the wallet contract
 }
 
@@ -225,13 +226,15 @@ interface AppRequest {
 Where 
 - `method`: name of the operation ('sendTransaction', 'signMessage', ...)
 - `params`: array of the operation specific parameters
-- `id`: identifier that allows to match requests and responses
-
+- `id`: increasing identifier that allows to match requests and responses
 
 
 **Wallet messages are responses or events.**
 
 Response is an object formatted as a json-rpc 2.0 response. Response `id` must match request's id. 
+
+Wallet doesn't accept any request with an id that does not greater the last processed request id of that session.
+
 ```tsx
 type WalletResponse = WalletResponseSuccess | WalletResponseError;
 
@@ -246,20 +249,20 @@ interface WalletResponseError {
 }
 ```
 
-Event is an object with property `event` that is equal to event's name, `id` that is sequential event counter (**not** related to `request.id` because there is no request for an event), and `payload` that contains event additional data. 
+Event is an object with property `event` that is equal to event's name, `id` that is increasing event counter (**not** related to `request.id` because there is no request for an event), and `payload` that contains event additional data. 
 ```tsx
 interface WalletEvent {
     event: WalletEventName;
-    id: number; // sequential event counter
+    id: number; // increasing event counter
     payload: <event-payload>; // specific payload for each event
 }
 
 type WalletEventName = 'connect' | 'connect_error' | 'disconnect';
 ```
 
-Wallet must increment `id` while generating a new event. (Every next event must have `id` > previous event `id`)
+Wallet must increase `id` while generating a new event. (Every next event must have `id` > previous event `id`)
 
-DApp will not accept any event with an id that matches the id of one of the previous events in this session. 
+DApp doesn't accept any event with an id that does not greater the last processed event id of that session. 
 
 ### Methods
 
@@ -278,6 +281,8 @@ interface SendTransactionRequest {
 Where `<transaction-payload>` is JSON with following properties:
 
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
+* `network` (NETWORK, optional): The network (mainnet or testnet) where DApp intends to send the transaction. If not set, the transaction is sent to the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
+* `from` (string, optional) - The sender address from which DApp intends to send the transaction. If not set, wallet allows user to select the sender's address at the moment of transaction approval. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the sender's address; If sending from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
 * `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
 
 Message structure:
@@ -299,6 +304,8 @@ Message structure:
 ```json5
 {
   "valid_until": 1658253458,
+  "network": NETWORK.MAINNET,
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
   "messages": [
     {
       "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
@@ -343,7 +350,9 @@ interface SendTransactionResponseError {
 | 400  | Method not supported       |
 
 
-#### Sign Data
+#### Sign Data (Experimental)
+
+> WARNING: this is currently an experimental method and its signature may change in the future 
 
 App sends **SignDataRequest**:
 
@@ -359,6 +368,7 @@ Where `<sign-data-payload>` is JSON with following properties:
 
 * `schema_crc` (integer): indicates the layout of payload cell that in turn defines domain separation.
 * `cell` (string, base64 encoded Cell): contains arbitrary data per its TL-B definition.
+* `publicKey` (HEX string without 0x, optional): The public key of key pair from which DApp intends to sign the data. If not set, the wallet is not limited in what keypair to sign. If `publicKey` parameter is set, the wallet SHOULD to sign by keypair corresponding this public key; If sign by this specified keypair is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN this data.
 
 The signature will be computed in the following way:
 `ed25519(uint32be(schema_crc) ++ uint64be(timestamp) ++ cell_hash(X), privkey)`
@@ -447,7 +457,7 @@ The event fires when the user deletes the app in the wallet. The app must react 
 ```tsx
 interface DisconnectEvent {
 	type: "disconnect",
-	id: number; // sequential event counter
+	id: number; // increasing event counter
 	payload: { }
 }
 ```
@@ -456,7 +466,7 @@ interface DisconnectEvent {
 ```tsx
 type ConnectEventSuccess = {
     event: "connect";
-    id: number; // sequential event counter
+    id: number; // increasing event counter
     payload: {
         items: ConnectItemReply[];
         device: DeviceInfo;
@@ -464,7 +474,7 @@ type ConnectEventSuccess = {
 }
 type ConnectEventError = {
     event: "connect_error",
-    id: number; // sequential event counter
+    id: number; // increasing event counter
     payload: {
         code: number;
         message: string;

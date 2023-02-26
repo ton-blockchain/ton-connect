@@ -18,6 +18,7 @@ If you implement an SDK, a wallet or want to learn more how Ton Connect works, p
 * [Bridge API](bridge.md) specifies how the data is transmitted between the app and the wallet.
 * [Session protocol](session.md) ensures end-to-end encrypted communication over the bridge.
 * [Requests protocol](requests-responses.md) defines requests and responses for the app and the wallet.
+* [Wallet guidelines](wallet-guidelines.md) defines guidelines for wallet developers.
 
 ## Q&A
 
@@ -49,8 +50,10 @@ If you build a wallet, you will need to provide a bridge. See our [reference imp
 
 Keep in mind that the wallet’s side of the bridge API is not mandated.
 
+For a quick start you can use the common TON Connect bridge.
+
 #### I make a wallet, how do I add it to the list of wallets? 
 
-Submit a pull request for the [wallets-list](https://github.com/ton-connect/wallets-list) repository and fill our all the necessary metadata.
+Submit a pull request for the [wallets-list](https://github.com/ton-blockchain/wallets-list) repository and fill our all the necessary metadata.
 
-Apps may also add or remove wallets directly through the SDK.
+Apps may also add wallets directly through the SDK.

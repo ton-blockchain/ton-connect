@@ -2,7 +2,7 @@
 
 Bridge is a transport mechanism to deliver messages from the app to the wallet and vice versa.
 
-* **Bridge is maintained by the wallet provider**. App developers do not have to choose or build a bridge. Each wallet’s bridge is listed in the [wallets-list](https://github.com/ton-connect/wallets-list) config.
+* **Bridge is maintained by the wallet provider**. App developers do not have to choose or build a bridge. Each wallet’s bridge is listed in the [wallets-list](https://github.com/ton-blockchain/wallets-list) config.
 * **Messages are end-to-end encrypted.** Bridge does not see the contents or long-term identifiers of the app or wallet.
 * **Communication is symmetrical.** Bridge does not distinguish between apps and wallets: both are simply clients.
 * Bridge keeps separate queues of messages for each recipient’s **Client ID**.
@@ -90,7 +90,7 @@ Parameter **v** specifies the protocol version. Unsupported versions are not acc
 
 Parameter **id** specifies app’s Client ID encoded as hex (without '0x' prefix).
 
-Parameter **r** specifies URL-safe json [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection).
+Parameter **r** specifies URL-safe json [ConnectRequest](requests-responses.md#initiating-connection).
 
 Parameter **ret** (optional) specifies return strategy for the deeplink when user signs/declines the request.
 - 'back' (default) means return to the app which initialized deeplink jump (e.g. browser, native app, ...),
@@ -129,7 +129,7 @@ tc://?
 
 Used by the embedded apps via the injected binding `window.<wallet-js-bridge-key>.tonconnect`.
 
-`wallet-js-bridge-key` must be specified in the [wallets list](https://github.com/ton-connect/wallets-list)
+`wallet-js-bridge-key` can be specified in the [wallets list](https://github.com/ton-blockchain/wallets-list)
 
 JS bridge runs on the same device as the wallet and the app, so communication is not encrypted.
 
@@ -148,12 +148,12 @@ interface TonConnectBridge {
 }
 ```
 
-Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for [ConnectRequest](https://github.com/ton-connect/docs/blob/main/requests-responses.md#initiating-connection) until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
+Just like with the HTTP bridge, wallet side of the bridge does not receive the app requests except for [ConnectRequest](requests-responses.md#initiating-connection) until the session is confirmed by the user. Technically, the messages arrive from the webview into the bridge controller, but they are silently ignored.
 
 SDK around the implements **autoconnect()** and **connect()** as silent and non-silent attempts at establishing the connection.
 
 #### walletInfo (optional)
-Represents wallet metadata. Might be defined to make an injectable wallet works with TonConnect even if the wallet is not listed in the [wallets-list.json](https://github.com/ton-connect/wallets-list).
+Represents wallet metadata. Might be defined to make an injectable wallet works with TonConnect even if the wallet is not listed in the [wallets-list.json](https://github.com/ton-blockchain/wallets-list).
 
 Wallet metadata format:
 ```ts
@@ -165,9 +165,9 @@ interface WalletInfo {
 }
 ```
 
-Detailed properties description: https://github.com/ton-connect/wallets-list#entry-format.
+Detailed properties description: https://github.com/ton-blockchain/wallets-list#entry-format.
 
-If `TonConnectBridge.walletInfo` is defined and the wallet is listed in the [wallets-list.json](https://github.com/ton-connect/wallets-list), `TonConnectBridge.walletInfo` properties will override corresponding wallet properties from the wallets-list.json. 
+If `TonConnectBridge.walletInfo` is defined and the wallet is listed in the [wallets-list.json](https://github.com/ton-blockchain/wallets-list), `TonConnectBridge.walletInfo` properties will override corresponding wallet properties from the wallets-list.json. 
 
 
 #### connect()
@@ -190,7 +190,7 @@ Otherwise returns `ConnectEventError` with error code 100 (Unknown app).
 
 #### send()
 
-Sends a [message](https://github.com/ton-connect/docs/blob/main/requests-responses.md#messages) to the bridge, excluding the ConnectRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
+Sends a [message](requests-responses.md#messages) to the bridge, excluding the ConnectRequest (that goes into QR code when using HTTP bridge and into connect when using JS Bridge).
 Directly returns promise with WalletResponse, do you don't need to wait for responses with `listen`;
 
 #### listen()

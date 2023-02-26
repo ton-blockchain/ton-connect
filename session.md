@@ -59,4 +59,4 @@ ct    <- M[24..]
 m     <- nacl.box.open(ct, nonce, Y, x)
 ```
 
-Plaintext **m** is recovered and parsed per [Requests/Responses](https://github.com/ton-connect/docs/blob/main/requests-responses.md#requests-and-responses).
+Plaintext **m** is recovered and parsed per [Requests/Responses](requests-responses.md#requests-and-responses).
