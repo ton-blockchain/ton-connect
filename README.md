@@ -50,7 +50,7 @@ If you build a wallet, you will need to provide a bridge. See our [reference imp
 
 Keep in mind that the wallet’s side of the bridge API is not mandated.
 
-For a quick start you can use the common TON Connect bridge.
+For a quick start you can use the common TON Connect bridge https://bridge.tonapi.io/bridge.
 
 #### I make a wallet, how do I add it to the list of wallets? 
 
