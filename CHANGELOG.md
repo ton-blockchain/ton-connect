@@ -1,0 +1,1 @@
+7 March 2023 - `Feature` format of `DeviceInfo` of `ConnectEventSuccess` changed; Parameter `maxMessages` added to the Feature `SendTransaction`.
