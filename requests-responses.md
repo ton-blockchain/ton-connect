@@ -326,7 +326,8 @@ Message structure:
 Wallet replies with **SendTransactionResponse**:
 
 ```tsx
-type SendTransactionResponse = SendTransactionResponseSuccess | SendTransactionResponseError; 
+type SendTransactionMessageResponse = SendTransactionResponseSuccess | SendTransactionResponseError; 
+type SendTransactionResponse = SendTransactionMessageResponse | SendTransactionMessageResponse[];
 
 interface SendTransactionResponseSuccess {
     result: <boc>;
