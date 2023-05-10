@@ -10,6 +10,8 @@ We currently provide JS SDK suitable for web apps.
 
 If you use another language, please take the JS SDK as a reference and implement your own wrapper. Let us know about your work — we'd be happy to list it here.
 
+* Python: [PyTonConnect](https://pypi.org/project/pytonconnect/) | [source code](https://github.com/XaBbl4/pytonconnect)
+
 ## Protocol specifications
 
 If you implement an SDK, a wallet or want to learn more how Ton Connect works, please read below.
