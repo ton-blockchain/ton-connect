@@ -50,8 +50,7 @@ type TonAddressItem = {
 }
 type TonProofItem = {
   name: "ton_proof";
-  // arbitrary payload, e.g. nonce + expiration timestamp.
-  payload: string;
+  payload: string; // arbitrary payload, e.g. nonce + expiration timestamp.
 }
 ```
 
@@ -95,6 +94,8 @@ type Feature = { name: 'SendTransaction', maxMessages: number } | // `maxMessage
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
+// Untrusted data returned by the wallet. 
+// If you need a guarantee that the user owns this address and public key, you need to additionally request a ton_proof.
 type TonAddressItemReply = {
   name: "ton_addr";
   address: string; // TON address raw (`0:<hex>`)
@@ -194,8 +195,17 @@ where:
 
 Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
 
-The signature must be verified using the public key provided via `get_public_key` method on smart contract deployed at `Address`.
+The signature must be verified by public key:
 
+1. First, try to obtain public key via `get_public_key` get-method on smart contract deployed at `Address`.
+
+2. If the smart contract is not deployed yet, or the get-method is missing, you need:
+
+   2.1. Parse `TonAddressItemReply.walletStateInit` and get public key from stateInit. You can compare the `walletStateInit.code` with the code of standard wallets contracts and parse the data according to the found wallet version.
+
+   2.2. Check that `TonAddressItemReply.publicKey` equals to obtained public key
+   
+   2.3. Check that `TonAddressItemReply.walletStateInit.hash()` equals to `TonAddressItemReply.address`. `.hash()` means BoC hash.
 
 ## Messages
 
