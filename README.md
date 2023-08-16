@@ -1,6 +1,6 @@
 # TON Connect Documentation
 
-> **NOTICE: This Documentation is Outdated**
+> ⚠️ **NOTICE: This Documentation is Outdated**
 >
 > Thank you for visiting this documentation. We want to inform you that the content in this section is outdated and might not reflect the current state of the project.
 > 
