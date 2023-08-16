@@ -297,7 +297,7 @@ Where `<transaction-payload>` is JSON with following properties:
 * `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
 
 Message structure:
-* `address` (string): message destination
+* `address` (string): message destination in user-friendly format
 * `amount` (decimal string): number of nanocoins to send.
 * `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
@@ -319,11 +319,11 @@ Message structure:
   "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
   "messages": [
     {
-      "address": "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F",
+      "address": "EQBBJBB3HagsujBqVfqeDUPJ0kXjgTPLWPFFffuNXNiJL0aA",
       "amount": "20000000",
       "stateInit": "base64bocblahblahblah==" //deploy contract
     },{
-      "address": "0:E69F10CC84877ABF539F83F879291E5CA169451BA7BCE91A37A5CED3AB8080D3",
+      "address": "EQDmnxDMhId6v1Ofg_h5KR5coWlFG6e86Ro3pc7Tq4CA0-Jn",
       "amount": "60000000",
       "payload": "base64bocblahblahblah==" //transfer nft to new deployed account 0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F
     }
