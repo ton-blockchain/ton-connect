@@ -1,4 +1,8 @@
-# Ton Connect Documentation
+# TON Connect Specification
+
+This repository provides details on the TON Connect protocol.
+
+If you just want to integrate TON Connect into your app, just follow the [TON Documentation](https://docs.ton.org/develop/dapps/ton-connect/overview) guides. No need to dive deep into the protocols.
 
 ## Developing a DApp? Use the SDK
 
