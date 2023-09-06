@@ -13,6 +13,8 @@ If you just want to integrate TON Connect into your app, just follow the [TON Do
 
 If no SDK for your language, take the [JS SDK](https://github.com/ton-connect/sdk/tree/main/packages/sdk) as a reference and implement your own wrapper. Let us know about your work — we'd be happy to list it here.
 
+* Python: [PyTonConnect](https://pypi.org/project/pytonconnect/) | [source code](https://github.com/XaBbl4/pytonconnect)
+
 ## Protocol specifications
 
 If you implement an SDK, a wallet or want to learn more how Ton Connect works, please read below.
