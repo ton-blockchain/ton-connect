@@ -1,4 +1,4 @@
-# Requests and Responses
+tab# Requests and Responses
 
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
@@ -207,7 +207,7 @@ The signature must be verified by public key:
    
    2.3. Check that `TonAddressItemReply.walletStateInit.hash()` equals to `TonAddressItemReply.address`. `.hash()` means BoC hash.
 
-## Messages
+esc## Messages
 
 - All messages from the app to the wallet are requests for an operation.
 - Messages from the wallet to the application can be either responses to app requests or events triggered by user actions on the side of the wallet.
@@ -277,7 +277,7 @@ DApp doesn't accept any event with an id that does not greater the last processe
 
 ### Methods
 
-#### Sign and send transaction
+tab#### Sign and send transaction
 
 App sends **SendTransactionRequest**:
 
@@ -361,7 +361,7 @@ interface SendTransactionResponseError {
 | 400  | Method not supported       |
 
 
-#### Sign Data (Experimental)
+tab#### Sign Data (Experimental)
 
 > WARNING: this is currently an experimental method and its signature may change in the future 
 
