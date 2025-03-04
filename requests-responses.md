@@ -188,9 +188,9 @@ where:
    * `workchain`: 32-bit signed integer big endian;
    * `hash`: 256-bit unsigned integer big endian;
 * `AppDomain` is Length ++ EncodedDomainName
-  - `Length` is 32-bit value of utf-8 encoded app domain name length in bytes
+  - `Length` is 32-bit unsigned integer little endian, value of utf-8 encoded app domain name length in bytes
   - `EncodedDomainName` id `Length`-byte  utf-8 encoded app domain name
-* `Timestamp` 64-bit unix epoch time of the signing operation 
+* `Timestamp` 64-bit unsigned integer little endian unix epoch time of the signing operation 
 * `Payload` is a variable-length binary string.
 
 Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
