@@ -301,6 +301,8 @@ Message structure:
 * `amount` (decimal string): number of nanocoins to send.
 * `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
+* `extra_currency` (object, optional): extra currency to send with the message. 
+
 
 <details>
 <summary>Common cases</summary>
@@ -321,7 +323,10 @@ Message structure:
     {
       "address": "EQBBJBB3HagsujBqVfqeDUPJ0kXjgTPLWPFFffuNXNiJL0aA",
       "amount": "20000000",
-      "stateInit": "base64bocblahblahblah==" //deploy contract
+      "stateInit": "base64bocblahblahblah==", //deploy contract
+      "extra_currency": {
+        "239": "1000000000"
+      }
     },{
       "address": "EQDmnxDMhId6v1Ofg_h5KR5coWlFG6e86Ro3pc7Tq4CA0-Jn",
       "amount": "60000000",
@@ -368,7 +373,7 @@ App sends **SignDataRequest**:
 ```tsx
 interface SignDataRequest {
 	method: 'signData';
-	params: [<sign-data-payload>];
+	params: <sign-data-payload>;
 	id: string;
 }
 ```
@@ -379,23 +384,59 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
   - **type** (string): 'text'
   - **text** (string): arbitrary UTF-8 text to sign. 
 
-- **Binary**. An arbitrary bytes sequence in the base64 encoding.
+- **Binary**. JSON object with following properties:
   - **type** (string): 'binary'
-  - **bytes** (string): base64 (not url safe) encoded bytes array to sign.
+  - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
 
-- **Cell**. An arbitrary cell in the base64 encoding.
+- **Cell**. JSON object with following properties:
   - **type** (string): 'cell'
-  - **schema** (string): TL-B scheme of the cell payload
-  - **cell** (string): base64 (not url safe) encoded cell to sign.
+  - **schema** (string): TL-B scheme of the cell payload as unicode string
+  - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
+
+**Examples:**
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "text",
+    "text": "Confirm new 2fa number:\n+1 234 567 8901"
+  },
+  "id": "1"
+}
+```
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "binary",
+    "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
+  },
+  "id": "2"
+}
+```
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "cell",
+    "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
+    "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
+  },
+  "id": "3"
+}
+```
 
 **Wallet behaviour:**
 
-- If the payload is in the Text format, Wallet MUST show the content from the `text` field to the user.
-- If the payload is in the Binary or Cell format, Wallet SHOULD display a warning message informing that the content being signed is unknown.
+- If the payload is in the Text format, Wallet MUST show the content from the `text` field to the user with monospace font, without any formatting and with forced line breaks. User SHOULD scroll long message before signing.
+- If the payload is in the Binary or Cell format, Wallet MUST display a warning message informing that the content being signed is unknown.
 - If the payload is in the Cell format, Wallet CAN parse TL-B scheme from the `schema` field and verify payload using this scheme. Otherwise, Wallet MUST display a warning message informing that the content being signed is unknown.
-    - If the `schema` contains unparseable data, Wallet SHOULD display a warning message informing that the content being signed is unknown.
-    - If the data in the `cell` field cannot be parsed using the provided TL-B sheme, Wallet SHOULD display a warning message informing that the content being signed is unknown.
-    - If the data is parsed successfully, Wallet MUST display the parsed data to the user.
+    - If the `schema` contains unparseable data, Wallet MUST display a warning message informing that the content being signed is unknown.
+    - If the data in the `cell` field cannot be parsed using the provided TL-B sheme, Wallet MUST display a warning message informing that the content being signed is unknown.
+    - If the data is parsed successfully, Wallet MUST display the parsed data to the user in any readable format.
 
 Wallet replies with **SignDataResponse**:
 
@@ -408,7 +449,7 @@ interface SignDataResponseSuccess {
         address: string;   // wallet address
         timestamp: number; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
         domain: string;  // app domain name (as url part, without encoding) 
-        payload: [<sign-data-payload>]; // payload received from the request in the `params` field
+        payload: <sign-data-payload>; // payload received from the request in the `params` field
     };
     id: string;
 }
@@ -447,7 +488,7 @@ where:
 - `Address` is the wallet address encoded as a sequence:
   - `workchain`: 32-bit signed integer big endian;
   - `hash`: 256-bit unsigned integer big endian;
-- `AppDomain` is Length ++ EncodedDomainName
+- `AppDomain` is Length ++ EncodedDomainName from dApp manifest without scheme (same as in `connect` event)
   - `Length` is 32-bit value of utf-8 encoded app domain name length in bytes;
   - `EncodedDomainName` is `Length`byte utf-8 encoded app domain name;
 - `Timestamp` 64-bit unix epoch time of the signing operation
@@ -482,7 +523,7 @@ where:
 - `schema` is the TL-B scheme of the cell payload in the utf-8 encoded string.
 - `timestamp` is 64-bit unix epoch time of the signing operation.
 - `userWalletAddress` is the user wallet address that signs the payload.
-- `appDomain` is DNS-like encoded domain name (e.g. `\0com\0stonfi`).
+- `appDomain` from dApp manifest is DNS-like encoded domain name (e.g. `\0com\0stonfi`).
 - `cell` is the arbitrary payload cell.
 
 **Smart Contract Behaviour**
