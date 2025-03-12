@@ -432,7 +432,7 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 **Wallet behaviour:**
 
 - If the payload is in the Text format, Wallet MUST show the content from the `text` field to the user with monospace font, without any formatting and with forced line breaks. User SHOULD scroll long message before signing.
-- If the payload is in the Binary or Cell format, Wallet MUST display a warning message informing that the content being signed is unknown.
+- If the payload is in the Binary format, Wallet MUST display a warning message informing that the content being signed is unknown.
 - If the payload is in the Cell format, Wallet CAN parse TL-B scheme from the `schema` field and verify payload using this scheme. Otherwise, Wallet MUST display a warning message informing that the content being signed is unknown.
     - If the `schema` contains unparseable data, Wallet MUST display a warning message informing that the content being signed is unknown.
     - If the data in the `cell` field cannot be parsed using the provided TL-B sheme, Wallet MUST display a warning message informing that the content being signed is unknown.
