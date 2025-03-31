@@ -373,7 +373,7 @@ App sends **SignDataRequest**:
 ```tsx
 interface SignDataRequest {
 	method: 'signData';
-	params: <sign-data-payload>;
+	params: [<sign-data-payload>];
 	id: string;
 }
 ```
@@ -475,12 +475,13 @@ interface SignDataResponseError {
 If the payload is in the Text or Binary format, then signature computes as follows:
 
 ```
-message = utf8_encode("sign-data/") ++
-		  Address ++
+message = 0xffff ++
+          utf8_encode("ton-connect/sign-data/") ++
+          Address ++
           AppDomain ++
           Timestamp ++
           Payload
-signature = Ed25519Sign(privkey, sha256(0xffff ++ utf8_encode("ton-connect") ++ sha256(message)))
+signature = Ed25519Sign(privkey, sha256(message))
 ```
 
 where:
