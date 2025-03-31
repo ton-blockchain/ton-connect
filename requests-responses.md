@@ -373,7 +373,7 @@ App sends **SignDataRequest**:
 ```tsx
 interface SignDataRequest {
 	method: 'signData';
-	params: <sign-data-payload>;
+	params: [<sign-data-payload>];
 	id: string;
 }
 ```
