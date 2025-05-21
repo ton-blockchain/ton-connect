@@ -302,6 +302,8 @@ Message structure:
 * `amount` (decimal string): number of nanocoins to send.
 * `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
+* `extra_currency` (object, optional): extra currency to send with the message. 
+
 
 <details>
 <summary>Common cases</summary>
@@ -322,7 +324,10 @@ Message structure:
     {
       "address": "EQBBJBB3HagsujBqVfqeDUPJ0kXjgTPLWPFFffuNXNiJL0aA",
       "amount": "20000000",
-      "stateInit": "base64bocblahblahblah==" //deploy contract
+      "stateInit": "base64bocblahblahblah==", //deploy contract
+      "extra_currency": {
+        "239": "1000000000"
+      }
     },{
       "address": "EQDmnxDMhId6v1Ofg_h5KR5coWlFG6e86Ro3pc7Tq4CA0-Jn",
       "amount": "60000000",
@@ -362,9 +367,7 @@ interface SendTransactionResponseError {
 | 400  | Method not supported       |
 
 
-#### Sign Data (Experimental)
-
-> WARNING: this is currently an experimental method and its signature may change in the future 
+#### Sign Data
 
 App sends **SignDataRequest**:
 
@@ -376,36 +379,86 @@ interface SignDataRequest {
 }
 ```
 
-Where `<sign-data-payload>` is JSON with following properties:
+Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 
-* `schema_crc` (integer): indicates the layout of payload cell that in turn defines domain separation.
-* `cell` (string, base64 encoded Cell): contains arbitrary data per its TL-B definition.
-* `publicKey` (HEX string without 0x, optional): The public key of key pair from which DApp intends to sign the data. If not set, the wallet is not limited in what keypair to sign. If `publicKey` parameter is set, the wallet SHOULD to sign by keypair corresponding this public key; If sign by this specified keypair is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN this data.
+- **Text**. JSON object with following properties:
+  - **type** (string): 'text'
+  - **text** (string): arbitrary UTF-8 text to sign. 
 
-The signature will be computed in the following way:
-`ed25519(uint32be(schema_crc) ++ uint64be(timestamp) ++ cell_hash(X), privkey)`
+- **Binary**. JSON object with following properties:
+  - **type** (string): 'binary'
+  - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
 
-[See details](https://github.com/oleganza/TEPs/blob/datasig/text/0000-data-signatures.md)
+- **Cell**. JSON object with following properties:
+  - **type** (string): 'cell'
+  - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
+  *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
+  - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
 
-Wallet should decode the cell in accordance with the schema_crc and show corresponding data to the user.
-If the schema_crc is unknown to the wallet, the wallet should show danger notification/UI to the user.  
+**Examples:**
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "text",
+    "text": "Confirm new 2fa number:\n+1 234 567 8901"
+  },
+  "id": "1"
+}
+```
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "binary",
+    "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
+  },
+  "id": "2"
+}
+```
+
+```json5
+{
+  "method": "signData",
+  "params": {
+    "type": "cell",
+    "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
+    "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
+  },
+  "id": "3"
+}
+```
+
+**Wallet behaviour:**
+
+- If the payload is in the Text format, Wallet MUST show the content from the `text` field to the user with monospace font, without any formatting and with forced line breaks. User SHOULD scroll long message before signing.
+- If the payload is in the Binary format, Wallet MUST display a warning message informing that the content being signed is unknown.
+- If the payload is in the Cell format, Wallet CAN parse TL-B scheme from the `schema` field and verify payload using this scheme. Otherwise, Wallet MUST display a warning message informing that the content being signed is unknown.
+    - If the `schema` contains unparseable data, Wallet MUST display a warning message informing that the content being signed is unknown.
+    - If the data in the `cell` field cannot be parsed using the provided TL-B sheme, Wallet MUST display a warning message informing that the content being signed is unknown.
+    - If the data is parsed successfully, Wallet MUST display the parsed data to the user in any readable format.
 
 Wallet replies with **SignDataResponse**:
 
 ```tsx
-type SignDataResponse = SignDataResponseSuccess | SignDataResponseError; 
+type SignDataResponse = SignDataResponseSuccess | SignDataResponseError;
 
 interface SignDataResponseSuccess {
     result: {
-      signature: string; // base64 encoded signature 
-      timestamp: string; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
+        signature: string; // base64 encoded signature
+        address: string;   // wallet address
+        timestamp: number; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
+        domain: string;  // app domain name (as url part, without encoding) 
+        payload: <sign-data-payload>; // payload received from the request in the `params` field
     };
     id: string;
 }
 
 interface SignDataResponseError {
-   error: { code: number; message: string };
-   id: string;
+    error: { code: number; message: string };
+    id: string;
 }
 ```
 
@@ -419,6 +472,83 @@ interface SignDataResponseError {
 | 300  | User declined the request |
 | 400  | Method not supported      |
 
+**Signature**
+
+If the payload is in the Text or Binary format, then signature computes as follows:
+
+```
+message = 0xffff ++
+          utf8_encode("ton-connect/sign-data/") ++
+          Address ++
+          AppDomain ++
+          Timestamp ++
+          Payload
+signature = Ed25519Sign(privkey, sha256(message))
+```
+
+where:
+
+- `Address` is the wallet address encoded as a sequence:
+  - `workchain`: 32-bit signed integer big endian;
+  - `hash`: 256-bit unsigned integer big endian;
+- `AppDomain` is Length ++ EncodedDomainName from dApp manifest without scheme (same as in `connect` event)
+  - `Length` is 32-bit value of utf-8 encoded app domain name length in bytes;
+  - `EncodedDomainName` is `Length`byte utf-8 encoded app domain name;
+- `Timestamp` 64-bit unix epoch time of the signing operation
+- `Payload` is Prefix ++ PayloadLength ++ PayloadData:
+  - `Prefix` is `utf8_encode("txt")` for text data or `utf8_encode("bin")` for binary data;
+  - `PayloadLength` is 32-bit value of PayloadData length in bytes;
+  - `PayloadData` is `PayloadLength` byte payload data, which is `utf8_encode(text)` for text data or bytes array for binary data;
+
+If the payload is in the Cell format, then signature computes as follows:
+
+```tsx
+let payload = beginCell()
+	.storeUint(0x75569022, 32)
+	.storeUint(crc32(schema), 32)
+	.storeUint(timestamp, 64)
+	.storeAddress(userWalletAddress)
+	.storeStringRefTail(appDomain)
+	.storeRef(cell);
+
+let signature = Ed25519Sign(payload.hash(), privkey);
+```
+
+TL-B:
+
+```tsx
+message#75569022 schema_hash:uint32 timestamp:uint64 userAddress:MsgAddress 
+					{n:#} appDomain:^(SnakeData ~n) payload:^Cell = Message;
+```
+
+where:
+
+- `schema` is the TL-B scheme of the cell payload in the utf-8 encoded string.
+- `timestamp` is 64-bit unix epoch time of the signing operation.
+- `userWalletAddress` is the user wallet address that signs the payload.
+- `appDomain` from dApp manifest is DNS-like encoded domain name (e.g. `\0com\0stonfi`).
+- `cell` is the arbitrary payload cell.
+
+**Smart Contract Behaviour**
+
+If receiver of the signed data is a smart contract, then the smart contract MUST perform following steps:
+
+1. Smart contract MUST verify that the message signature belongs to the message.
+2. Smart contract MUST verify that first 32 bytes equals to the prefix `0x75569022`.
+3. Smart contract MUST verify `schema_hash` field is equal to the expected hash of the schema.
+4. Smart contract MUST verify that the message has not expired according to its expiration rules by comparing timestamp from the `timestamp` field. Smart contract MUST have limits on the message expiration.
+5. Smart contract MUST check that `userWalletAddress` is equal to the expected wallet address.
+6. Smart contract MUST check that `appDomain` is equal to the application app domain. Smart contract CAN compare hash of the `appDomain` instead.
+
+**Which format should App choose?**
+
+If the data is human-readable text, use Text format.
+
+If the data should be used in the TON Blockchain, use Cell format.
+
+If the data needs to be human-readable—but is not textual—use the **Cell** format. In this format, include a `schema` field that contains the TL-B schema of the payload. However, note that the Wallet is not required to display the content of the Cell.
+
+Otherwise, use Binary format.
 
 #### Disconnect operation
 When user disconnects the wallet in the dApp, dApp should inform the wallet to help the wallet save resources and delete unnecessary session.
