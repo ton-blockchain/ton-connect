@@ -390,7 +390,8 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 
 - **Cell**. JSON object with following properties:
   - **type** (string): 'cell'
-  - **schema** (string): TL-B scheme of the cell payload as unicode string
+  - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
+  *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
   - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
 
 **Examples:**
