@@ -447,7 +447,7 @@ type SignDataResponse = SignDataResponseSuccess | SignDataResponseError;
 interface SignDataResponseSuccess {
     result: {
         signature: string; // base64 encoded signature
-        address: string;   // wallet address
+        address: string;   // wallet address in raw format
         timestamp: number; // UNIX timestamp in seconds (UTC) at the moment on creating the signature.
         domain: string;  // app domain name (as url part, without encoding) 
         payload: <sign-data-payload>; // payload received from the request in the `params` field
