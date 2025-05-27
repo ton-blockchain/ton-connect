@@ -525,7 +525,7 @@ where:
 - `schema` is the TL-B scheme of the cell payload in the utf-8 encoded string.
 - `timestamp` is 64-bit unix epoch time of the signing operation.
 - `userWalletAddress` is the user wallet address that signs the payload.
-- `appDomain` from dApp manifest is DNS-like encoded domain name (e.g. `\0com\0stonfi`).
+- `appDomain` domain name must be encoded exactly in the DNS wire format specified by [TEP-81](https://github.com/ton-blockchain/TEPs/blob/master/text/0081-dns-standard.md), e.g. `com\0stonfi\0`.
 - `cell` is the arbitrary payload cell.
 
 **Smart Contract Behaviour**
