@@ -89,8 +89,16 @@ type DeviceInfo = {
                                 // Currently there is only one feature -- 'SendTransaction'; 
 }
 
-type Feature = { name: 'SendTransaction', maxMessages: number } | // `maxMessages` is maximum number of messages in one `SendTransaction` that the wallet supports
-        { name: 'SignData' };
+type Feature =
+  | {
+      name: 'SendTransaction';
+      maxMessages: number; // maximum number of messages in one `SendTransaction` that the wallet supports
+      extraCurrencySupported?: boolean; // indicates if the wallet supports extra currencies
+    }
+  | {
+      name: 'SignData';
+      types: ('text' | 'binary' | 'cell')[]; // array of supported data types for signing
+    };
 
 type ConnectItemReply = TonAddressItemReply | TonProofItemReply ...;
 
