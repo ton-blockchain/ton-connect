@@ -1,4 +1,4 @@
-# Requests and Responses
+tab# Requests and Responses
 
 App sends requests to the wallet. Wallet sends responses and events to the app.
 
@@ -24,14 +24,14 @@ App needs to have its manifest to pass meta information to the wallet. Manifest 
 Best practice is to place the manifest in the root of your app, e.g. `https://myapp.com/tonconnect-manifest.json`. It allows the wallet to handle your app better and improve the UX connected to your app.
 Make sure that manifest is available to GET by its URL.
 
-#### Fields description
+esc#### Fields description
 - `url` -- app URL. Will be used as the dapp identifier. Will be used to open the dapp after click to its icon in the wallet. It is recommended to pass url without closing slash, e.g. 'https://mydapp.com' instead of 'https://mydapp.com/'.
 - `name` -- app name. Might be simple, will not be used as identifier.
 - `iconUrl` -- Url to the app icon. Must be PNG, ICO, ... format. SVG icons are not supported. Perfectly pass url to a 180x180px PNG icon.
 - `termsOfUseUrl` -- (optional) url to the Terms Of Use document. Optional for usual apps, but required for the apps which is placed in the Tonkeeper recommended apps list.
 - `privacyPolicyUrl` -- (optional) url to the Privacy Policy document. Optional for usual apps, but required for the apps which is placed in the Tonkeeper recommended apps list.
 
-### Initiating connection
+tab### Initiating connection
 
 App’s request message is **InitialRequest**.
 
