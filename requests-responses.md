@@ -298,7 +298,7 @@ interface SendTransactionRequest {
 }
 ```
 
-Where `<transaction-payload>` is JSON with following properties:
+Where `<transaction-payload>` is JSON string with following properties:
 
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
 * `network` (NETWORK, optional): The network (mainnet or testnet) where DApp intends to send the transaction. If not set, the transaction is sent to the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
@@ -387,18 +387,24 @@ interface SignDataRequest {
 }
 ```
 
-Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
+Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 
 - **Text**. JSON object with following properties:
   - **type** (string): 'text'
-  - **text** (string): arbitrary UTF-8 text to sign. 
-
+  - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **text** (string): arbitrary UTF-8 text to sign.
+  
 - **Binary**. JSON object with following properties:
   - **type** (string): 'binary'
+  - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
   - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
 
 - **Cell**. JSON object with following properties:
   - **type** (string): 'cell'
+  - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
   - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
   *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
   - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
@@ -407,35 +413,29 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 
 ```json5
 {
-  "method": "signData",
-  "params": {
-    "type": "text",
-    "text": "Confirm new 2fa number:\n+1 234 567 8901"
-  },
-  "id": "1"
+  "type": "text",
+  "text": "Confirm new 2fa number:\n+1 234 567 8901",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
 ```json5
 {
-  "method": "signData",
-  "params": {
-    "type": "binary",
-    "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
-  },
-  "id": "2"
+  "type": "binary",
+  "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A==",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
 ```json5
 {
-  "method": "signData",
-  "params": {
-    "type": "cell",
-    "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
-    "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
-  },
-  "id": "3"
+  "type": "cell",
+  "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
+  "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI=",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
