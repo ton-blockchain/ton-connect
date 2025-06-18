@@ -411,15 +411,42 @@ Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 
 **Examples:**
 
+_Params_:
+
+```json5
+{
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
+  "type": "text",
+  "text": "Confirm new 2fa number:\n+1 234 567 8901"
+}
+```
+
+```json5
+{
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
+  "type": "binary",
+  "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
+}
+```
+
+```json5
+{
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
+  "type": "cell",
+  "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
+  "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
+}
+```
+
+_Requests_:
+
 ```json5
 {
   "method": "signData",
-  "params": [{
-    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
-    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
-    "type": "text",
-    "text": "Confirm new 2fa number:\n+1 234 567 8901"
-  }],
+  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"text\",\"text\": \"Confirm new 2fa number:\\n+1 234 567 8901\"}"],
   "id": "1"
 }
 ```
@@ -427,11 +454,7 @@ Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 ```json5
 {
   "method": "signData",
-  "params": [{
-    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
-    "type": "binary",
-    "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
-  }],
+  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"binary\",\"bytes\": \"1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A==\"}"],
   "id": "2"
 }
 ```
@@ -439,13 +462,7 @@ Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 ```json5
 {
   "method": "signData",
-  "params": [{
-    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
-    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
-    "type": "cell",
-    "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
-    "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
-  }],
+  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"cell\",\"schema\": \"transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;\",\"cell\": \"te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI=\"}"],
   "id": "3"
 }
 ```
