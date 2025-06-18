@@ -298,7 +298,7 @@ interface SendTransactionRequest {
 }
 ```
 
-Where `<transaction-payload>` is JSON with following properties:
+Where `<transaction-payload>` is JSON string with following properties:
 
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
 * `network` (NETWORK, optional): The network (mainnet or testnet) where DApp intends to send the transaction. If not set, the transaction is sent to the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
@@ -387,7 +387,7 @@ interface SignDataRequest {
 }
 ```
 
-Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
+Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 
 - **Text**. JSON object with following properties:
   - **type** (string): 'text'
@@ -414,12 +414,12 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 ```json5
 {
   "method": "signData",
-  "params": {
+  "params": [{
     "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
     "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "text",
     "text": "Confirm new 2fa number:\n+1 234 567 8901"
-  },
+  }],
   "id": "1"
 }
 ```
@@ -427,12 +427,11 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 ```json5
 {
   "method": "signData",
-  "params": {
-    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "params": [{
     "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "binary",
     "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
-  },
+  }],
   "id": "2"
 }
 ```
@@ -440,13 +439,13 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 ```json5
 {
   "method": "signData",
-  "params": {
+  "params": [{
     "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
     "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "cell",
     "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
     "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
-  },
+  }],
   "id": "3"
 }
 ```
