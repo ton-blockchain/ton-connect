@@ -415,29 +415,29 @@ _Params_:
 
 ```json5
 {
-  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
-  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
   "type": "text",
-  "text": "Confirm new 2fa number:\n+1 234 567 8901"
+  "text": "Confirm new 2fa number:\n+1 234 567 8901",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
 ```json5
 {
-  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
-  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
   "type": "binary",
-  "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
+  "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A==",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
 ```json5
 {
-  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
-  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
   "type": "cell",
   "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
-  "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
+  "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI=",
+  "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+  "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f"
 }
 ```
 
@@ -446,7 +446,7 @@ _Requests_:
 ```json5
 {
   "method": "signData",
-  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"text\",\"text\": \"Confirm new 2fa number:\\n+1 234 567 8901\"}"],
+  "params": ["{\"type\": \"text\",\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"text\": \"Confirm new 2fa number:\\n+1 234 567 8901\"}"],
   "id": "1"
 }
 ```
@@ -454,7 +454,7 @@ _Requests_:
 ```json5
 {
   "method": "signData",
-  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"binary\",\"bytes\": \"1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A==\"}"],
+  "params": ["{\"type\": \"binary\",\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"bytes\": \"1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A==\"}"],
   "id": "2"
 }
 ```
@@ -462,7 +462,7 @@ _Requests_:
 ```json5
 {
   "method": "signData",
-  "params": ["{\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"type\": \"cell\",\"schema\": \"transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;\",\"cell\": \"te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI=\"}"],
+  "params": ["{\"type\": \"cell\",\"network\": \"-239\",\"from\": \"0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f\",\"schema\": \"transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;\",\"cell\": \"te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI=\"}"],
   "id": "3"
 }
 ```
