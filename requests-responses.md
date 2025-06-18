@@ -387,21 +387,26 @@ interface SignDataRequest {
 }
 ```
 
-Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
+Where `<sign-data-payload>` is a JSON object consisting of:
 
-- **Text**. JSON object with following properties:
-  - **type** (string): 'text'
-  - **text** (string): arbitrary UTF-8 text to sign. 
+- **Base Fields** (applies to all payload types):
+  - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in <wc>:<hex> format, optional): The sender address from which DApp intends to sign data. If not set, wallet allows user to select the sender's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the sender's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
 
-- **Binary**. JSON object with following properties:
-  - **type** (string): 'binary'
-  - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
+- **One of the 3 types of payload**:
+  - **Text**. JSON object with following properties:
+    - **type** (string): 'text'
+    - **text** (string): arbitrary UTF-8 text to sign. 
 
-- **Cell**. JSON object with following properties:
-  - **type** (string): 'cell'
-  - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
-  *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
-  - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
+  - **Binary**. JSON object with following properties:
+    - **type** (string): 'binary'
+    - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
+
+  - **Cell**. JSON object with following properties:
+    - **type** (string): 'cell'
+    - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
+    *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
+    - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
 
 **Examples:**
 
@@ -409,6 +414,8 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 {
   "method": "signData",
   "params": {
+    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "text",
     "text": "Confirm new 2fa number:\n+1 234 567 8901"
   },
@@ -420,6 +427,8 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 {
   "method": "signData",
   "params": {
+    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "binary",
     "bytes": "1Z/SGh+3HFMKlVHSkN91DpcCzT4C5jzHT3sA/24C5A=="
   },
@@ -431,6 +440,8 @@ Where `<sign-data-payload>` is JSON with one of the 3 types of payload:
 {
   "method": "signData",
   "params": {
+    "network": "-239", // enum NETWORK { MAINNET = '-239', TESTNET = '-3'}
+    "from": "0:348bcf827469c5fc38541c77fdd91d4e347eac200f6f2d9fd62dc08885f0415f",
     "type": "cell",
     "schema": "transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress response_destination:MsgAddress custom_payload:(Maybe ^Cell) forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) = InternalMsgBody;",
     "cell": "te6ccgEBAQEAVwAAqg+KfqVUbeTvKqB4h0AcnDgIAZucsOi6TLrfP6FcuPKEeTI6oB3fF/NBjyqtdov/KtutACCLqvfmyV9kH+Pyo5lcsrJzJDzjBJK6fd+ZnbFQe4+XggI="
