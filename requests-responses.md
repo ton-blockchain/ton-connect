@@ -22,7 +22,7 @@ App needs to have its manifest to pass meta information to the wallet. Manifest 
 ```
 
 Best practice is to place the manifest in the root of your app, e.g. `https://myapp.com/tonconnect-manifest.json`. It allows the wallet to handle your app better and improve the UX connected to your app.
-The manifest and all the links in it must be publicly accessible from the internet and should be requestable from any origin without CORS restrictions. Make sure that manifest is available to GET by its URL.
+Make sure that manifest is available to GET by its URL.
 
 #### Fields description
 - `url` -- app URL. Will be used as the dapp identifier. Will be used to open the dapp after click to its icon in the wallet. It is recommended to pass url without closing slash, e.g. 'https://mydapp.com' instead of 'https://mydapp.com/'.
