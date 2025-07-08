@@ -309,7 +309,29 @@ Message structure:
 * `amount` (decimal string): number of nanocoins to send.
 * `payload` (string base64, optional): raw one-cell BoC encoded in Base64.
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
-* `extra_currency` (object, optional): extra currency to send with the message. 
+* `extra_currency` (object, optional): extra currency to send with the message.
+
+**Important:**  
+The `address` field **must be provided in the [friendly format TEP-123](https://github.com/ton-blockchain/TEPs/pull/123)** — that is, base64url-encoded with the bounceable or non-bounceable flag. The wallet extracts this flag and uses it to determine the `bounce` behavior of the message.
+
+ - Use **bouncable format** (`bounce = true`) when sending to initialized smart contracts or wallets that can safely receive bounced messages.
+ - Use **non-bouncable format** (`bounce = false`) when sending to fresh or uninitialized wallets that cannot receive bounced messages.
+
+ If the address is provided in a raw format (e.g., without the bounce flag), the wallet may misinterpret the destination and the transaction could bounce — especially when the target wallet is not initialized.
+
+ ✅ To generate both address types using `@ton/core`:
+
+```ts
+ import { Address } from '@ton/core';
+
+ const address = Address.parse('...'); // raw or friendly
+
+ const bouncable = address.toString({ bounceable: true });       // bounce = true
+ const nonBouncable = address.toString({ bounceable: false });   // bounce = false
+```
+
+[Non-bounceable Messages doc](https://docs.ton.org/v3/documentation/smart-contracts/message-management/non-bounceable-messages)
+
 
 
 <details>
