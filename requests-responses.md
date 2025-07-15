@@ -311,26 +311,27 @@ Message structure:
 * `stateInit` (string base64, optional): raw once-cell BoC encoded in Base64.
 * `extra_currency` (object, optional): extra currency to send with the message. 
 
-**Important:**  
-The `address` field **must be provided in the [friendly format TEP-123](https://github.com/ton-blockchain/TEPs/pull/123)** — that is, base64url-encoded with the bounceable or non-bounceable flag. The wallet extracts this flag and uses it to determine the `bounce` behavior of the message.
+**Important:**
 
- - Use **bouncable format** (`bounce = true`) when sending to initialized smart contracts or wallets that can safely receive bounced messages.
- - Use **non-bouncable format** (`bounce = false`) when sending to fresh or uninitialized wallets that cannot receive bounced messages.
+The address field **MUST be provided in the [friendly format TEP-123](https://github.com/ton-blockchain/TEPs/pull/123)** — that is, base64url-encoded with the bounceable or non-bounceable flag. Wallets MUST reject addresses provided in raw format. The wallet MUST extract the bounce flag from the address format and use it to determine the bounce behavior of the message.
 
- If the address is provided in a raw format (e.g., without the bounce flag), the wallet may misinterpret the destination and the transaction could bounce — especially when the target wallet is not initialized.
+You MUST use **bounceable format** (bounce = true) for **all smart contracts**. Smart contracts can throw errors during message handling or when uninitialized contracts receive messages without state init. The bounceable flag ensures funds are returned to sender in all error cases.
 
- ✅ To generate both address types using `@ton/core`:
+You SHOULD use **non-bounceable format** (bounce = false) for **wallet contracts** and **contracts where errors are expected** (and you don't want funds returned). This allows sending funds to uninitialized wallets without bouncing — wallets can be deployed when receiving the funds. It's also useful when intentionally sending value to contracts that will throw errors as part of expected behavior.
+
+To generate both address types using `@ton/core`:
 
 ```ts
  import { Address } from '@ton/core';
 
  const address = Address.parse('...'); // raw or friendly
 
- const bouncable = address.toString({ bounceable: true });       // bounce = true
- const nonBouncable = address.toString({ bounceable: false });   // bounce = false
-```
+// Bouncable format, for smart contract interactions
+ const bouncable = address.toString({ urlSafe: true, bounceable: true });       // bounce = true
 
-[Non-bounceable Messages doc](https://docs.ton.org/v3/documentation/smart-contracts/message-management/non-bounceable-messages)
+// No-bouncable format, for wallet contracts or expected-to-fail transactions
+ const nonBouncable = address.toString({ urlSafe: true, bounceable: false });   // bounce = false
+```
 
 <details>
 <summary>Common cases</summary>
