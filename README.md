@@ -57,6 +57,6 @@ For a quick start you can use the common TON Connect bridge https://bridge.tonap
 
 #### I make a wallet, how do I add it to the list of wallets? 
 
-Submit a pull request for the [wallets-list](https://github.com/ton-blockchain/wallets-list) repository and fill our all the necessary metadata.
+Submit a pull request for the [wallets-list](https://github.com/ton-blockchain/wallets-list) repository and fill out the wallet manifest.
 
 Apps may also add wallets directly through the SDK.
