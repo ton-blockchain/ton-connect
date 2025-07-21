@@ -15,7 +15,7 @@ If no SDK for your language, take the [JS SDK](https://github.com/ton-connect/sd
 
 ## Protocol specifications
 
-If you implement an SDK, a wallet or want to learn more how Ton Connect works, please read below.
+If you implement an SDK, a wallet or want to learn more about how TON Connect works, please read below.
 
 * [Protocol workflow](workflows.md): an overview of all the protocols.
 * [Bridge API](bridge.md) specifies how the data is transmitted between the app and the wallet.
@@ -25,7 +25,7 @@ If you implement an SDK, a wallet or want to learn more how Ton Connect works, p
 
 ## Q&A
 
-#### I am building an HTML/JS app, what should I read?
+#### I am building an HTML/JS app. What should I read?
 
 Simply use the [TON Documentation](https://docs.ton.org/develop/dapps/ton-connect/overview) manuals and do not worry about the underlying protocols.
 
@@ -41,19 +41,19 @@ JS SDK does that for you; just get wallets list `connector.getWallets()` and che
 
 Like with embedded apps (see above), JS SDK detects it for you via `injected` property of the corresponding `connector.getWallets()` list item. If you build your own SDK you should check that `window.[targetWalletJsBridgeKey].tonconnect` exists.
 
-#### How to implement backend authorization with tonconnect?
+#### How to implement backend authorization with TON Connect?
 
 [See an example of dapp-backend](https://github.com/ton-connect/demo-dapp-backend)
 
 #### How do I make my own bridge? 
 
-You don’t need to, unless you are building a wallet.
+You don’t need to unless you are building a wallet.
 
 If you build a wallet, you will need to provide a bridge. See our [reference implementation in Go](https://github.com/ton-connect/bridge).
 
 Keep in mind that the wallet’s side of the bridge API is not mandated.
 
-For a quick start you can use the common TON Connect bridge https://bridge.tonapi.io/bridge.
+For a quick start, you can use the common TON Connect bridge https://bridge.tonapi.io/bridge.
 
 #### I make a wallet, how do I add it to the list of wallets? 
 
