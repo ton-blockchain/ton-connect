@@ -1,14 +1,17 @@
-# TON Connect Documentation
+# TON Connect Specification
 
-## Developing a TON app? Use the SDK.
+This repository provides details on the TON Connect protocol.
 
-We currently provide JS SDK suitable for web apps.
+## Developing a DApp? Use the SDK
 
-* [Ton Connect JS](https://github.com/ton-connect/sdk)
-* [Getting Started](https://github.com/ton-connect/sdk/tree/main/packages/sdk)
-* Demo app: [deployed app](https://ton-connect.github.io/demo-dapp/) | [source code](https://github.com/ton-connect/demo-dapp)
+If you just want to integrate TON Connect into your app, just follow the [TON Documentation](https://docs.ton.org/develop/dapps/ton-connect/overview) guides. No need to dive deep into the protocols.
 
-If you use another language, please take the JS SDK as a reference and implement your own wrapper. Let us know about your work — we'd be happy to list it here.
+* [TON Connect Overview](https://docs.ton.org/develop/dapps/ton-connect/overview)
+* [TON Connect for React Apps](https://docs.ton.org/develop/dapps/ton-connect/react)
+* [TON Connect for HTML/JS Apps](https://docs.ton.org/develop/dapps/ton-connect/web)
+* [List of supported SDKs](https://docs.ton.org/develop/dapps/ton-connect/developers)
+
+If no SDK for your language, take the [JS SDK](https://github.com/ton-connect/sdk/tree/main/packages/sdk) as a reference and implement your own wrapper. Let us know about your work — we'd be happy to list it here.
 
 ## Protocol specifications
 
@@ -24,7 +27,7 @@ If you implement an SDK, a wallet or want to learn more about how TON Connect wo
 
 #### I am building an HTML/JS app. What should I read?
 
-Simply use the JS SDK and do not worry about the underlying protocols.
+Simply use the [TON Documentation](https://docs.ton.org/develop/dapps/ton-connect/overview) manuals and do not worry about the underlying protocols.
 
 #### I need an SDK in my favorite language
 
@@ -54,6 +57,6 @@ For a quick start, you can use the common TON Connect bridge https://bridge.tona
 
 #### I make a wallet, how do I add it to the list of wallets? 
 
-Submit a pull request for the [wallets-list](https://github.com/ton-blockchain/wallets-list) repository and fill out all the necessary metadata.
+Submit a pull request for the [wallets-list](https://github.com/ton-blockchain/wallets-list) repository and fill out the wallet manifest.
 
 Apps may also add wallets directly through the SDK.
