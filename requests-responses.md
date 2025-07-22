@@ -204,16 +204,22 @@ where:
 Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
 
 The signature must be verified by public key:
+1. **First, try to extract the public key from `stateInit`:**
 
-1. First, try to obtain public key via `get_public_key` get-method on smart contract deployed at `Address`.
+   - If `TonAddressItemReply.walletStateInit` is available, attempt to parse the public key from it.
+   - Compare `walletStateInit.code` with the code of known standard wallet contracts. If a match is found, parse the `stateInit.data` according to the wallet version.
+   - Check that `TonAddressItemReply.publicKey` matches the extracted public key.
+   - Verify that `walletStateInit.hash()` equals `TonAddressItemReply.address.hash()` (`.hash()` refers to the BoC hash).
 
-2. If the smart contract is not deployed yet, or the get-method is missing, you need:
+2. **If `walletStateInit` is not available or cannot be parsed:**
 
-   2.1. Parse `TonAddressItemReply.walletStateInit` and get public key from stateInit. You can compare the `walletStateInit.code` with the code of standard wallets contracts and parse the data according to the found wallet version.
+   - Call the on-chain `get_public_key` get-method on the smart contract deployed at `TonAddressItemReply.address`.
+   - Extract the public key from the result of this method call.
 
-   2.2. Check that `TonAddressItemReply.publicKey` equals to obtained public key
-   
-   2.3. Check that `TonAddressItemReply.walletStateInit.hash()` equals to `TonAddressItemReply.address`. `.hash()` means BoC hash.
+---
+
+This approach **prioritizes local parsing of `stateInit`**, and uses the on-chain `get_public_key` method **only as a fallback**, if local parsing is not possible. This reduces unnecessary blockchain calls and improves efficiency.
+
 
 ## Messages
 
