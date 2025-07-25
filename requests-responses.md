@@ -204,19 +204,20 @@ where:
 Note: payload is variable-length untrusted data. To avoid using unnecessary length prefixes we simply put it last in the message.
 
 The signature must be verified by public key:
-1. **First, try to extract the public key from `stateInit`:**
 
-   - If `TonAddressItemReply.walletStateInit` is available, attempt to parse the public key from it.
-   - Compare `walletStateInit.code` with the code of known standard wallet contracts. If a match is found, parse the `stateInit.data` according to the wallet version.
-   - Check that `TonAddressItemReply.publicKey` matches the extracted public key.
-   - Verify that `walletStateInit.hash()` equals `TonAddressItemReply.address.hash()` (`.hash()` refers to the BoC hash).
-
-2. **If `walletStateInit` is not available or cannot be parsed:**
-
-   - Call the on-chain `get_public_key` get-method on the smart contract deployed at `TonAddressItemReply.address`.
-   - Extract the public key from the result of this method call.
-
----
+1. **First, try to extract the public key from `walletStateInit`:**<br>
+	1.1. Use `TonAddressItemReply.walletStateInit` and attempt to parse as `StateInit` cell.<br>
+ 	1.2. Compare `walletStateInit.code` with the code of known standard wallet contracts. If a match is found, parse the `walletStateInit.data` according to the wallet version.<br>
+	1.3. Take `publicKey` from parsed `walletStateInit.data`<br>
+2. **If `publicKey` is cannot be taken:**<br>
+	2.1. Call the on-chain `get_public_key` get-method on the smart contract deployed at `TonAddressItemReply.address`.<br>
+	2.2. Extract the `publicKey` from the result of this method call.<br>
+3. **Verify `publicKey` and all params:**<br>
+	3.1. Check that `TonAddressItemReply.publicKey` matches the extracted public key from `walletStateInit` or from on-chain method `get_public_key` call.<br>
+	3.2. Verify that `TonAddressItemReply.walletStateInit.hash()` equals `TonAddressItemReply.address.hash()` (`.hash()` refers to the BoC hash).<br>
+4. After that make sure that the `ton_proof` signature is signed by that `publicKey`<br>
+	4.1. Create a message payload according specification in the [Address proof signature (ton_proof)](https://github.com/jenshenJ/ton-connect/blob/patch-4/requests-responses.md#address-proof-signature-ton_proof) section and make a valid `hash`<br>
+   	4.2. Verify that `ton_proof` signature is matches with `hash` and `publicKey`
 
 This approach **prioritizes local parsing of `stateInit`**, and uses the on-chain `get_public_key` method **only as a fallback**, if local parsing is not possible. This reduces unnecessary blockchain calls and improves efficiency.
 
