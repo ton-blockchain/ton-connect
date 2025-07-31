@@ -98,10 +98,9 @@ Parameter **ret** (optional) specifies return strategy for the deeplink when use
 - a URL: wallet will open this URL after completing the user's action. Note, that you shouldn't pass your app's URL if it is a webpage. This option should be used for native apps to work around possible OS-specific issues with `'back'` option.
 
 `ret` parameter should be supported for empty deeplinks -- it might be used to specify the wallet behavior after other actions confirmation (send transaction, sign raw, ...).
+The `id` parameter should also be supported even in empty deep links -- it might be used by wallets to identify the application.
 ```
-https://<wallet-universal-url>?ret=back
-```
-
+https://<wallet-universal-url>?ret=back&id=f55bcac4566efd50b4341
 
 The link may be embedded in a QR code or clicked directly.
 
