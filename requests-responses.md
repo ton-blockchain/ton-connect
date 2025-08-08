@@ -216,7 +216,7 @@ The signature must be verified by public key:
 	3.1. Check that `TonAddressItemReply.publicKey` matches the extracted public key from `walletStateInit` or from on-chain method `get_public_key` call.<br>
 	3.2. Verify that `TonAddressItemReply.walletStateInit.hash()` equals `TonAddressItemReply.address.hash()` (`.hash()` refers to the BoC hash).<br>
 4. After that make sure that the `ton_proof` signature is signed by that `publicKey`<br>
-	4.1. Create a message payload according specification in the [Address proof signature (ton_proof)](https://github.com/jenshenJ/ton-connect/blob/patch-4/requests-responses.md#address-proof-signature-ton_proof) section and make a valid `hash`<br>
+	4.1. Create a message payload according specification in the [Address proof signature (ton_proof)](https://github.com/ton-blockchain/ton-connect/blob/main/requests-responses.md#address-proof-signature-ton_proof) section and make a valid `hash`<br>
    	4.2. Verify that `ton_proof` signature is matches with `hash` and `publicKey`
 
 This approach **prioritizes local parsing of `stateInit`**, and uses the on-chain `get_public_key` method **only as a fallback**, if local parsing is not possible. This reduces unnecessary blockchain calls and improves efficiency.
