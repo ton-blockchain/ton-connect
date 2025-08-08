@@ -205,15 +205,22 @@ Note: payload is variable-length untrusted data. To avoid using unnecessary leng
 
 The signature must be verified by public key:
 
-1. First, try to obtain public key via `get_public_key` get-method on smart contract deployed at `Address`.
+1. **First, try to extract the public key from `walletStateInit`:**<br>
+	1.1. Use `TonAddressItemReply.walletStateInit` and attempt to parse as `StateInit` cell.<br>
+ 	1.2. Compare `walletStateInit.code` with the code of known standard wallet contracts. If a match is found, parse the `walletStateInit.data` according to the wallet version.<br>
+	1.3. Take `publicKey` from parsed `walletStateInit.data`<br>
+2. **If `publicKey` is cannot be taken:**<br>
+	2.1. Call the on-chain `get_public_key` get-method on the smart contract deployed at `TonAddressItemReply.address`.<br>
+	2.2. Extract the `publicKey` from the result of this method call.<br>
+3. **Verify `publicKey` and all params:**<br>
+	3.1. Check that `TonAddressItemReply.publicKey` matches the extracted public key from `walletStateInit` or from on-chain method `get_public_key` call.<br>
+	3.2. Verify that `TonAddressItemReply.walletStateInit.hash()` equals `TonAddressItemReply.address.hash()` (`.hash()` refers to the BoC hash).<br>
+4. After that make sure that the `ton_proof` signature is signed by that `publicKey`<br>
+	4.1. Create a message payload according specification in the [Address proof signature (ton_proof)](https://github.com/ton-blockchain/ton-connect/blob/main/requests-responses.md#address-proof-signature-ton_proof) section and make a valid `hash`<br>
+   	4.2. Verify that `ton_proof` signature is matches with `hash` and `publicKey`
 
-2. If the smart contract is not deployed yet, or the get-method is missing, you need:
+This approach **prioritizes local parsing of `stateInit`**, and uses the on-chain `get_public_key` method **only as a fallback**, if local parsing is not possible. This reduces unnecessary blockchain calls and improves efficiency.
 
-   2.1. Parse `TonAddressItemReply.walletStateInit` and get public key from stateInit. You can compare the `walletStateInit.code` with the code of standard wallets contracts and parse the data according to the found wallet version.
-
-   2.2. Check that `TonAddressItemReply.publicKey` equals to obtained public key
-   
-   2.3. Check that `TonAddressItemReply.walletStateInit.hash()` equals to `TonAddressItemReply.address`. `.hash()` means BoC hash.
 
 ## Messages
 
