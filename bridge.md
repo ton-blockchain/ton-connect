@@ -42,13 +42,15 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 
 ```tsx
 request
-    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300&topic=<sendTransaction|signData>
+    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300&topic=<sendTransaction|signData>[&no_request_source=true]
 
     body: <base64_encoded_message>
 ```
 
 
 The `topic` [optional] query parameter can be used by the bridge to deliver the push notification to the wallet. If the parameter is given, it must correspond to the RPC method called inside the encrypted `message`.
+
+The `no_request_source` [optional] query parameter can be used to disable request source metadata forwarding and encryption. When set to `true`, the bridge will not include the `request_source` field in the BridgeMessage. This parameter should be set for messages from `wallet` to `dapp`, since the `dapp` side doesn't need this information.
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
@@ -66,8 +68,7 @@ When the bridge receives a message from client A to client B, it collects reques
 type BridgeRequestSource struct {
     Origin    string `json:"origin"`     // protocol + domain (e.g., "https://app.ton.org")
     IP        string `json:"ip"`         // client IP address
-    Time      string `json:"time"`       // RFC 3339 timestamp
-    ClientID  string `json:"client_id"`  // sender's client ID
+    Time      string `json:"time"`       // unixtime
     UserAgent string `json:"user_agent"` // HTTP User-Agent header
 }
 ```
