@@ -114,6 +114,24 @@ request
     }
 ```
 
+### IP Address Endpoint
+
+Bridge provides an endpoint for wallets to obtain their current IP address for validation purposes:
+
+```tsx
+request
+    POST /myip
+```
+
+```tsx
+response
+    {
+      "ip": "<client_ip_address>"
+    }
+```
+
+This endpoint returns the IP address from which the request originated, allowing wallets to compare their current IP with the IP address stored in request source metadata for security validation.
+
 **Response statuses:**
 
 - **Phase 1** (first 6 months): `ok`, `unknown`
