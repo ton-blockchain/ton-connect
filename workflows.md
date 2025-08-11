@@ -6,8 +6,9 @@
 1. App initiates SSE connection with bridge;
 2. App passes connection info to the wallet via universal link or deeplink or QR code;
 3. Wallet connects to the bridge with given parameters, and save connection info locally;
-4. Wallet sends account information to the app using bridge;
-5. App receives message and save connection info locally;
+4. Wallet verifies connection source via `/verify` endpoint;
+5. Wallet sends account information to the app using bridge;
+6. App receives message and save connection info locally;
 
 ### Reconnection with http bridge
 1. App reads connection info from localstorage
@@ -22,9 +23,10 @@
 ###  Making ordinary requests and responses
 1. App and wallet are in a connected state
 2. App generates request and sends it to the bridge
-3. Bridge forwards message to the wallet
-4. Wallet generates response and sends it to the bridge
-5. Bridge forwards message to the app
+3. Bridge forwards message to the wallet with encrypted request source metadata
+4. Wallet decrypts and verifies request source metadata
+5. Wallet generates response and sends it to the bridge
+6. Bridge forwards message to the app
 
 
 ## Details
@@ -67,7 +69,32 @@ App is not yet in the connected state, and may restart the whole process at any 
 
 ### Wallet establishes connection
 
-Wallet opens up a link or QR code, reads plaintext app’s **Client ID** (A from parameter “**id”**) and [InitialRequest](requests-responses.md#initiating-connection) (from parameter **“r”**).
+Wallet opens up a link or QR code, reads plaintext app's **Client ID** (A from parameter "**id"**) and [InitialRequest](requests-responses.md#initiating-connection) (from parameter **"r"**).
+
+### Connection Verification Process
+
+**For HTTP Bridge connections:**
+
+1. **Extract connection details**: Wallet extracts origin, client ID from the connection request
+2. **Call verification endpoint**: Wallet sends POST request to `${bridgeUrl}/verify`:
+   ```json
+   {
+     "type": "connect", 
+     "client_id": "<client_id>",
+     "origin": "<protocol+domain>"
+   }
+   ```
+3. **Process verification response**: 
+   - `ok` + whitelisted domain → show verification mark ✅
+   - `danger` → display strong warning, recommend declining
+   - `warning` → display caution message
+   - `unknown` → proceed without special indicators
+
+**User Interface Guidelines:**
+- **Verification Mark (ok + whitelisted)**: "✅ Verified dApp — confirmed request from a trusted source"
+- **ok**: No message for default case
+- **Danger Warning**: "⚠️ This request could not be verified and may be fraudulent. Do not proceed unless you are certain of the source."
+- **Warning Message**: "⚠️ This request's details differ from expected. This could be due to a network change or other unusual event. Proceed with caution."
 
 Wallet computes the [InitialResponse](requests-responses.md#initiating-connection).
 
@@ -93,16 +120,37 @@ When the user performs an action in the app, it may request confirmation from th
 
 App generates a [request](requests-responses.md#messages).
 
-App encrypts it to the wallet’s key B (see below).
+App encrypts it to the wallet's key B (see below).
 
 App sends the encrypted message to B over the [Bridge](bridge.md).
 
-App shows “pending confirmation” UI to let user know to open the wallet.
+**Bridge processes message with verification**:
+1. Bridge collects request source metadata (origin, IP, User-Agent, timestamp, client ID)
+2. Bridge encrypts metadata using wallet's Curve25519 public key
+3. Bridge includes encrypted `request_source` in the BridgeMessage
+
+App shows "pending confirmation" UI to let user know to open the wallet.
 
 Wallet receives the encrypted message through the Bridge.
 
 Wallet decrypts the message and is now assured that it came from the app with ID **A.**
 
-Wallet shows the confirmation dialog to the user, signs transaction and [replies](requests-responses.md#messages) over the bridge with user’s decision: “Ok, sent” or “User cancelled”.
+### Transaction Verification Process
+
+**Request Source Verification:**
+1. **Decrypt metadata**: Wallet decrypts the `request_source` field from BridgeMessage using its private key
+2. **Parse metadata**: Extract BridgeRequestSource with origin, IP, User-Agent, timestamp, client ID  
+3. **Compare with stored connection**: Verify metadata matches stored connection details
+4. **Display warnings for mismatches**:
+   - Different origin → potential fraud warning
+   - Different IP/User-Agent → network change warning
+   - Significant time gaps → reject transaction
+
+**User Interface for Transaction Verification:**
+- Show request source details in transaction confirmation
+- Highlight any mismatches between connection and transaction metadata
+- Provide clear warnings for potential security issues
+
+Wallet shows the confirmation dialog to the user, signs transaction and [replies](requests-responses.md#messages) over the bridge with user's decision: "Ok, sent" or "User cancelled".
 
 App receives the encrypted message, decrypts it and closes the “pending confirmation” UI.

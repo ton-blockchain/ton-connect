@@ -61,3 +61,105 @@ Multiple network accounts can be created for one key pair. Implement this functi
 
     We recommend wallets provide the ability to disconnect session with a specified dapp because the dapp may have an incomplete UI.
 
+## Security Verification
+
+### Connection Verification Implementation
+
+1) **Implement `/verify` endpoint integration**
+
+    For HTTP Bridge connections, wallets MUST implement connection verification:
+
+    - Extract origin and client_id from connection requests
+    - Send POST request to `${bridgeUrl}/verify` with connection details
+    - Process verification status and display appropriate UI to users
+
+2) **Verification Status Handling**
+
+    Wallets MUST handle all verification statuses appropriately:
+    
+    - `ok` → Show that message is coming from the shown source, or show nothing
+    - `ok` + whitelisted domain → Show that message is coming from the shown source AND add source is verified
+    - `danger` → Show strong warning, recommend declining connection
+    - `warning` → Show caution message, let user decide  
+    - `unknown` → Proceed without special indicators (default behavior)
+
+3) **Rollout Phase Awareness**
+    
+    - **Phase 1 (first 6 months)**: Only `ok` and `unknown` statuses returned
+    - **Phase 2 (after 6 months)**: Full status set including `danger` and `warning`
+
+### Transaction Verification Implementation
+
+1) **Request Source Metadata Processing**
+
+    Wallets MUST implement transaction source verification:
+    
+    - Decrypt `request_source` field from BridgeMessage using session private key
+    - Parse BridgeRequestSource JSON containing origin, IP, User-Agent, timestamp, client_id
+    - Compare metadata against current user information
+    - Display warnings for any mismatches
+
+2) **Mismatch Detection and Warnings**
+
+    Display appropriate warnings for detected mismatches:
+    
+    - **Different origin**: Strong fraud warning - likely impersonation attack
+    - **Different IP/User-Agent**: Network change warning - could be legitimate or suspicious
+    - **Significant time gaps**: Message is not relevant anymore
+    - **Missing metadata**: Should not occure after rollout. Messages without metadata should be rejected
+
+### User Interface Guidelines
+
+1) **Verification Status Messages**
+
+    Wallets should be able to display following statuses:
+    - **Verification Mark (ok + whitelisted)**: 
+      "✅ Verified dApp — confirmed request from a trusted source"
+
+    - **Ok**:
+      "No message"
+    
+    - **Danger Warning**:
+      "⚠️ This request could not be verified and may be fraudulent. Do not proceed unless you are certain of the source."
+    
+    - **Warning Message**:
+      "⚠️ This request's details differ from your current connection. This could be due to a network change or other unusual event. Proceed with caution."
+
+2) **Transaction Source Display**
+
+    In transaction confirmation dialogs, wallets SHOULD display:
+    
+    - Request source information (origin, timestamp)
+    - Any detected mismatches with stored connection data
+    - Clear warnings for security concerns
+    - Country of the request origin(from ip)
+    - Information about request user agent in the human readable format(e.g. Chrome 113 from macOS)
+
+3) **User Education**
+
+    Wallets SHOULD educate users about:
+    
+    - Meaning of verification marks and warnings
+    - How to identify legitimate vs suspicious connection patterns
+    - Best practices for safe dApp interaction
+    - When to decline suspicious requests
+
+### Security Best Practices
+
+1) **Metadata Storage**
+
+    - Store connection metadata securely and encrypted
+    - Implement proper session management and cleanup
+    - Limit metadata retention to necessary duration
+
+2) **Verification Logic**
+
+    - Implement proper cryptographic verification of encrypted metadata
+    - Handle edge cases and error conditions gracefully
+
+3) **User Safety**
+
+    - Default to more restrictive behavior when verification fails
+    - Provide clear actionable guidance to users
+    - Never suppress security warnings to improve user experience
+
