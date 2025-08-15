@@ -42,7 +42,7 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 
 ```tsx
 request
-    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300&topic=<sendTransaction|signData>
+    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300&topic=<sendTransaction|signData>[&no_request_source=true]
 
     body: <base64_encoded_message>
 ```
@@ -50,23 +50,110 @@ request
 
 The `topic` [optional] query parameter can be used by the bridge to deliver the push notification to the wallet. If the parameter is given, it must correspond to the RPC method called inside the encrypted `message`.
 
+The `no_request_source` [optional] query parameter can be used to disable request source metadata forwarding and encryption. When set to `true`, the bridge will not include the `request_source` field in the BridgeMessage. This parameter should be set for messages from `wallet` to `dapp`, since the `dapp` side doesn't need this information.
+
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
 If the TTL exceeds the hard limit of the bridge server, it should respond with HTTP 400. Bridges should support at least 300 seconds TTL.
 
-When the bridge receives a message `base64_encoded_message` from client `A` addressed to client `B`, it generates a message `BridgeMessage`:
+## Bridge Security Verification
+
+For enhanced security, the bridge implements verification mechanisms to help wallets confirm the true source of connection and transaction requests.
+
+### Request Source Metadata
+
+When the bridge receives a message from client A to client B, it collects request source data:
+
+```go
+type BridgeRequestSource struct {
+    Origin    string `json:"origin"`     // protocol + domain (e.g., "https://app.ton.org")
+    IP        string `json:"ip"`         // client IP address
+    Time      string `json:"time"`       // unixtime
+    UserAgent string `json:"user_agent"` // HTTP User-Agent header
+}
+```
+
+### Message Processing with Verification
+
+When the bridge receives a message `base64_encoded_message` from client `A` addressed to client `B`, it:
+
+1. Collects request source metadata into `BridgeRequestSource` struct
+2. Serializes the struct to JSON
+3. Encrypts it using the recipient wallet's Curve25519 public key with:
+   ```
+   naclbox.SealAnonymous(nil, data, receiverSessionPublicKey, rand.Reader)
+   ```
+4. Base64 encodes the encrypted bytes
+5. Generates a message `BridgeMessage`:
 
 ```js
 {
   "from": <to_hex_str(A)>,
-  "message": <base64_encoded_message>
+  "message": <base64_encoded_message>,
+  "request_source": <base64_encoded_encrypted_request_source>
 }
 ```
 
-and sends it to the client B via SSE connection 
+and sends it to the client B via SSE connection:
 ```js
 resB.write(BridgeMessage)
 ```
+
+### Connect Verification Endpoint
+
+Bridge provides a verification endpoint for connection requests:
+
+```tsx
+request
+    POST /verify
+
+    body: {
+      "type": "connect",
+      "client_id": "<client_id>",
+      "origin": "<protocol+domain>"
+    }
+```
+
+### IP Address Endpoint
+
+Bridge provides an endpoint for wallets to obtain their current IP address for validation purposes:
+
+```tsx
+request
+    POST /myip
+```
+
+```tsx
+response
+    {
+      "ip": "<client_ip_address>"
+    }
+```
+
+This endpoint returns the IP address from which the request originated, allowing wallets to compare their current IP with the IP address stored in request source metadata for security validation.
+
+**Response statuses:**
+
+- **Phase 1** (first 6 months): `ok`, `unknown`
+- **Phase 2** (after 6 months): `ok`, `danger`, `warning`
+
+```tsx
+response
+    {
+      "status": "ok" | "danger" | "warning" | "unknown"
+    }
+```
+
+**Status meanings:**
+- `ok`: Request verified and matches expected source
+- `danger`: Strong indication of fraudulent activity
+- `warning`: Suspicious activity or mismatched details
+- `unknown`: Cannot verify (default for new or untracked origins)
+
+**Bridge Implementation:**
+- On SSE connect store connection metadata for a short period(~5 minutes): origin, IP address, client ID, timestamp
+- Compare verification requests against stored data
+- Implement rate limiting and abuse detection
 
 ### Heartbeat
 
