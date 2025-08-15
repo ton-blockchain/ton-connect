@@ -308,7 +308,7 @@ Where `<transaction-payload>` is JSON string with following properties:
 
 * `valid_until` (integer, optional): unix timestamp. after th moment transaction will be invalid.
 * `network` (NETWORK, optional): The network (mainnet or testnet) where DApp intends to send the transaction. If not set, the transaction is sent to the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
-* `from` (string in <wc>:<hex> format, optional) - The sender address from which DApp intends to send the transaction. If not set, wallet allows user to select the sender's address at the moment of transaction approval. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the sender's address; If sending from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
+* `from` (string in raw or friendly format, optional) - The sender address from which DApp intends to send the transaction. If not set, wallet allows user to select the sender's address at the moment of transaction approval. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the sender's address; If sending from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
 * `messages` (array of messages): 1-4 outgoing messages from the wallet contract to other accounts. All messages are sent out in order, however **the wallet cannot guarantee that messages will be delivered and executed in same order**.
 
 Message structure:
@@ -419,19 +419,19 @@ Where `<sign-data-payload>` is JSON string with one of the 3 types of payload:
 - **Text**. JSON object with following properties:
   - **type** (string): 'text'
   - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
-  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw or friendly format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
   - **text** (string): arbitrary UTF-8 text to sign.
   
 - **Binary**. JSON object with following properties:
   - **type** (string): 'binary'
   - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
-  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw or friendly format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
   - **bytes** (string): base64 (not url safe) encoded arbitrary bytes array to sign.
 
 - **Cell**. JSON object with following properties:
   - **type** (string): 'cell'
   - **network** (NETWORK, optional): The network (mainnet or testnet) where DApp intends to sign data. If not set, the data is signed with the network currently set in the wallet, but this is not safe and DApp should always strive to set the network. If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
-  - **from** (string in raw format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
+  - **from** (string in raw or friendly format, optional): The signer address from which DApp intends to sign data. If not set, wallet allows user to select the signer's address at the moment of signing data. If `from` parameter is set, the wallet should DO NOT ALLOW user to select the signer's address; If signing from the specified address is impossible, the wallet should show an alert and DO NOT ALLOW TO SIGN data.
   - **schema** (string): TL-B schema of the cell payload as an UTF-8 string.  
   *If the schema contains several type definitions, the **last** declared type is treated as the root during serialization and deserialization.*
   - **cell** (string): base64 (not url safe) encoded BoC (single-root) with arbitrary cell to sign.
