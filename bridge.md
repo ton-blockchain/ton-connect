@@ -135,12 +135,10 @@ JS bridge runs on the same device as the wallet and the app, so communication is
 
 The app works directly with plaintext requests and responses, without session keys and encryption.
 
-`walletInfo` field must be defined for Ton Connect be able connecting with your wallet.
-
 ```tsx
 interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
-    walletInfo?: WalletInfo;
+    walletInfo: WalletInfo;
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     isWalletBrowser: boolean; // if the page is opened into wallet's browser
     connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
