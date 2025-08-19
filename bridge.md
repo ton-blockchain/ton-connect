@@ -101,6 +101,7 @@ The `id` parameter should be supported even in empty deeplinks -- it might be us
 `ret` parameter should also be supported for empty deeplinks -- it might be used to specify the wallet behavior after other actions confirmation (send transaction, sign raw, ...).
 ```
 https://<wallet-universal-url>?id=<to_hex_str(A)>&ret=back
+```
 
 The link may be embedded in a QR code or clicked directly.
 
