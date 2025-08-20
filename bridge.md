@@ -22,7 +22,7 @@ Client with ID **A** connects to the bridge to listen to incoming requests.
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>
+    GET /events?client_id=<to_hex_str(A)>[&heartbeat=<legacy|message>]
 
     Accept: text/event-stream
 ```
@@ -31,7 +31,7 @@ request
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>
+    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>[&heartbeat=<legacy|message>]
 
     Accept: text/event-stream
 ```
@@ -70,9 +70,22 @@ resB.write(BridgeMessage)
 
 ### Heartbeat
 
-To keep the connection, bridge server should periodically send a "heartbeat" message to the SSE channel. Client should ignore such messages.
-So, the bridge heartbeat message is a string with word `heartbeat`.
+To keep the connection, bridge server should periodically send a "heartbeat" message to the SSE channel.
 
+The heartbeat format can be controlled by the optional `heartbeat` query parameter in the `/events` endpoint:
+
+- `heartbeat=legacy` or no parameter (default): The bridge heartbeat message is a string with word `heartbeat`.
+  ```
+  event: heartbeat
+  ```
+  JS client do not receive this message because it is not a standard SSE message event.
+
+- `heartbeat=message`: The heartbeat is sent as a standard SSE message event.
+  ```
+  event: message
+  data: heartbeat
+  ```
+  Client can opt-in to receive heartbeat as a standard SSE message event. This can be useful if client wants to implement custom connection keep-alive logic.
 
 ## Universal link
 
