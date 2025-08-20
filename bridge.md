@@ -138,7 +138,7 @@ The app works directly with plaintext requests and responses, without session ke
 ```tsx
 interface TonConnectBridge {
     deviceInfo: DeviceInfo; // see Requests/Responses spec
-    walletInfo?: WalletInfo;
+    walletInfo: WalletInfo;
     protocolVersion: number; // max supported Ton Connect version (e.g. 2)
     isWalletBrowser: boolean; // if the page is opened into wallet's browser
     connect(protocolVersion: number, message: ConnectRequest): Promise<ConnectEvent>;
