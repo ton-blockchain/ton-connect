@@ -22,18 +22,18 @@ Client with ID **A** connects to the bridge to listen to incoming requests.
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>[&heartbeat=<legacy|message>][&enable_queue_done_event=<0|1>]
+    GET /events?client_id=<to_hex_str(A)>[&heartbeat=<legacy|message>][&enable_queue_done_event=<true|false>]
 
     Accept: text/event-stream
 ```
 
-- enable_queue_done_event [optional] — when set to `1` the bridge will send an additional SSE event named `queue_done` whenever the server-side queue for the subscribed Client ID becomes empty (i.e. all buffered messages have been delivered). This can be used by clients to detect that there are no pending messages. Default behavior (if omitted or `0`) is to not emit `queue_done`. Support for this parameter is optional; clients should tolerate bridges that ignore it.
+- enable_queue_done_event [optional] — when set to `true` the bridge will send an additional SSE event named `queue_done` whenever the server-side queue for the subscribed Client ID becomes empty (i.e. all buffered messages have been delivered). This can be used by clients to detect that there are no pending messages. Default behavior (if omitted or `false`) is to not emit `queue_done`. Support for this parameter is optional; clients should tolerate bridges that ignore it.
 
 **Subscribing to the bridge second (any other) time**
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>[&heartbeat=<legacy|message>][&enable_queue_done_event=<0|1>]
+    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>[&heartbeat=<legacy|message>][&enable_queue_done_event=<true|false>]
 
     Accept: text/event-stream
 ```
