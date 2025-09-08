@@ -73,8 +73,8 @@ resB.write(BridgeMessage)
 Example `queue_done` SSE event (if enabled):
 
 ```
-event: queue_done
-data: {"client_id":"<to_hex_str(B)>","timestamp":<unix_ts>,"last_event_id":"<lastEventId>"}
+event: message
+data: queue_done
 ```
 
 ### Heartbeat
