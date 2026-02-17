@@ -83,7 +83,7 @@ type ConnectEventError = {
 
 type DeviceInfo = {
   platform: 'iphone' | 'ipad' | 'android' | 'windows' | 'mac' | 'linux' | 'browser';
-  appName: string; // e.g. "Tonkeeper"
+  appName: string; // e.g. "tonkeeper", must be the same as in the walletsList
   appVersion: string; // e.g. "2.3.367"
   maxProtocolVersion: number;
   features: Feature[]; // list of supported features and methods in RPC
