@@ -42,13 +42,15 @@ Sending message from client A to client B. Bridge returns error if ttl is too hi
 
 ```tsx
 request
-    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300&topic=<sendTransaction|signData>
+    POST /message?client_id=<to_hex_str(A)>?to=<to_hex_str(B)>&ttl=300[&topic=<sendTransaction|signData>][&trace_id=<uuid>]
 
     body: <base64_encoded_message>
 ```
 
 
 The `topic` [optional] query parameter can be used by the bridge to deliver the push notification to the wallet. If the parameter is given, it must correspond to the RPC method called inside the encrypted `message`.
+
+trace_id [optional] — a UUID used to trace the message path; if not provided, the bridge generates a UUIDv7. The trace_id is forwarded to the recipient and included in the BridgeMessage (as "trace_id").
 
 Bridge buffers messages up to TTL (in secs), but removes them as soon as the recipient receives the message.
 
