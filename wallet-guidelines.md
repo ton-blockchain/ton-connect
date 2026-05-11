@@ -2,11 +2,10 @@
 
 ## Networks
 
-1) **There aren't many networks.**
+1) **Network IDs**
 
-    At the moment, there are only two networks - mainnet and testnet. 
-
-    In the foreseeable future, the emergence of new mainnet TON-like networks is not expected. Note that the current mainnet has a built-in mechanism for alternative networks - workchains.
+    TON Connect protocol supports any TON network ID.
+    The `network` parameter accepts any TON network global_id as a string (e.g., `-239`, `-3`, or any other network ID).
 
 
 2) **Hide the testnet from ordinary users.**
@@ -22,13 +21,13 @@
     For the same reason there is no `NetworkChanged` or `ChainChanged` event in the Ton Connect protocol.
 
 
-3) **Do not send anything if the dapp is in testnet and the wallet is in mainnet.**
+3) **Network mismatch protection**
 
-    It is necessary to prevent loss of funds when dapp tries to send a transaction in testnet, and the wallet sends it in mainnet.
+    It is necessary to prevent loss of funds when dapp tries to send a transaction to one network (e.g., testnet), and the wallet sends it to another network (e.g., mainnet).
 
-    Dapps should explicitly indicate `network` field in `SendTransaction` request.
+    Dapps should explicitly indicate `network` field in `SendTransaction` and `SignData` requests.
 
-    If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND this transaction.
+    If the `network` parameter is set, but the wallet has a different network set, the wallet should show an alert and DO NOT ALLOW TO SEND/SIGN this transaction.
 
     The wallet SHOULD NOT offer to switch to another network in this case.
 
