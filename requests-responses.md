@@ -138,7 +138,7 @@ type TonProofItemReplySuccess = {
 }
 
 type TonProofItemReplyError = {
-  name: "ton_addr";
+  name: "ton_proof";
   error: {
       code: ConnectItemErrorCode;
       message?: string;
