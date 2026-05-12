@@ -22,16 +22,18 @@ Client with ID **A** connects to the bridge to listen to incoming requests.
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>[&heartbeat=<legacy|message>]
+    GET /events?client_id=<to_hex_str(A)>[&heartbeat=<legacy|message>][&enable_queue_done_event=<true|false>]
 
     Accept: text/event-stream
 ```
+
+- enable_queue_done_event [optional] — when set to `true` the bridge will send an additional SSE event named `queue_done` whenever the server-side queue for the subscribed Client ID becomes empty (i.e. all buffered messages have been delivered). This can be used by clients to detect that there are no pending messages. Default behavior (if omitted or `false`) is to not emit `queue_done`. Support for this parameter is optional; clients should tolerate bridges that ignore it.
 
 **Subscribing to the bridge second (any other) time**
 
 ```tsx
 request
-    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>[&heartbeat=<legacy|message>]
+    GET /events?client_id=<to_hex_str(A)>&last_event_id=<lastEventId>[&heartbeat=<legacy|message>][&enable_queue_done_event=<true|false>]
 
     Accept: text/event-stream
 ```
@@ -68,6 +70,13 @@ and sends it to the client B via SSE connection
 resB.write(BridgeMessage)
 ```
 
+Example `queue_done` SSE event (if enabled):
+
+```
+event: message
+data: queue_done
+```
+
 ### Heartbeat
 
 To keep the connection, bridge server should periodically send a "heartbeat" message to the SSE channel.
@@ -86,6 +95,17 @@ The heartbeat format can be controlled by the optional `heartbeat` query paramet
   data: heartbeat
   ```
   Client can opt-in to receive heartbeat as a standard SSE message event. This can be useful if client wants to implement custom connection keep-alive logic.
+
+### Queue Done Event
+To notify the client when all queued messages have been delivered, the bridge server can send a "queue_done" event to the SSE channel.
+
+The queue done notification can be controlled by the optional `enable_queue_done_event` query parameter in the `/events` endpoint:
+
+- `enable_queue_done_event=true`: The bridge will send a queue done notification as a standard SSE message event after all previously queued messages have been delivered to the client.
+
+- No parameter or `enable_queue_done_event=false` (default): No queue done event will be sent.
+
+The queue done event is sent once per connection after the client receives all messages that were queued for delivery before the SSE connection was established. This can be useful for clients that need to know when they have caught up with all pending messages and can expect only new real-time messages from that point forward.
 
 ## Universal link
 
