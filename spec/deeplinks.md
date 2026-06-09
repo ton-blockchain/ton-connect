@@ -130,7 +130,7 @@ Raw outgoing message inside `ms`.
 | Wire field | Full name        | Required | Type   | Description |
 |------------|------------------|----------|--------|-------------|
 | `a`        | `address`        | yes      | string | Destination address in friendly format. |
-| `am`       | `amount`         | yes      | string | Nanocoins as a decimal string. |
+| `am`       | `amount`         | yes      | string | Nanograms as a decimal string. |
 | `p`        | `payload`        | no       | string | Raw one-cell BoC, base64-encoded. |
 | `si`       | `stateInit`      | no       | string | Raw one-cell BoC, base64-encoded. |
 | `ec`       | `extra_currency` | no       | object | Map of extra-currency ID (integer) to amount (decimal string). |
@@ -145,7 +145,7 @@ Structured item inside `i`. The `t` field discriminates the variant: `ton`, `jet
 |------------|------------------|----------|--------|-------------|
 | `t`        | `type`           | yes      | `"ton"` | Item discriminator. |
 | `a`        | `address`        | yes      | string | Destination address in friendly format. |
-| `am`       | `amount`         | yes      | string | Nanocoins as a decimal string. |
+| `am`       | `amount`         | yes      | string | Nanograms as a decimal string. |
 | `p`        | `payload`        | no       | string | Raw one-cell BoC, base64-encoded. |
 | `si`       | `stateInit`      | no       | string | Raw one-cell BoC, base64-encoded. |
 | `ec`       | `extra_currency` | no       | object | Map of extra-currency ID to amount. |
@@ -158,10 +158,10 @@ Structured item inside `i`. The `t` field discriminates the variant: `ton`, `jet
 | `ma`       | `master`              | yes      | string    | Jetton master contract address. |
 | `d`        | `destination`         | yes      | string    | Recipient address. |
 | `am`       | `amount`              | yes      | string    | Jetton amount in elementary units. |
-| `aa`       | `attachAmount`        | no       | string    | TON value (nanocoins) to attach for transfer execution. |
-| `rd`       | `responseDestination` | no       | string    | Address for the excess-TON refund. Defaults to the sender. |
+| `aa`       | `attachAmount`        | no       | string    | GRAM value (nanograms) to attach for transfer execution. |
+| `rd`       | `responseDestination` | no       | string    | Address for the excess-GRAM refund. Defaults to the sender. |
 | `cp`       | `customPayload`       | no       | string    | Raw one-cell BoC, base64-encoded. |
-| `fa`       | `forwardAmount`       | no       | string    | Nanocoins forwarded to the destination. |
+| `fa`       | `forwardAmount`       | no       | string    | Nanograms forwarded to the destination. |
 | `fp`       | `forwardPayload`      | no       | string    | Raw one-cell BoC, base64-encoded. |
 | `qi`       | `queryId`             | no       | string    | Query ID for the transfer body. |
 
@@ -172,10 +172,10 @@ Structured item inside `i`. The `t` field discriminates the variant: `ton`, `jet
 | `t`        | `type`                | yes      | `"nft"` | Item discriminator. |
 | `na`       | `nftAddress`          | yes      | string | NFT item contract address. |
 | `no`       | `newOwner`            | yes      | string | New owner address. |
-| `aa`       | `attachAmount`        | no       | string | TON value (nanocoins) to attach. |
-| `rd`       | `responseDestination` | no       | string | Address for the excess-TON refund. Defaults to the sender. |
+| `aa`       | `attachAmount`        | no       | string | GRAM value (nanograms) to attach. |
+| `rd`       | `responseDestination` | no       | string | Address for the excess-GRAM refund. Defaults to the sender. |
 | `cp`       | `customPayload`       | no       | string | Raw one-cell BoC, base64-encoded. |
-| `fa`       | `forwardAmount`       | no       | string | Nanocoins forwarded to the destination. |
+| `fa`       | `forwardAmount`       | no       | string | Nanograms forwarded to the destination. |
 | `fp`       | `forwardPayload`      | no       | string | Raw one-cell BoC, base64-encoded. |
 | `qi`       | `queryId`             | no       | string | Query ID for the transfer body. |
 

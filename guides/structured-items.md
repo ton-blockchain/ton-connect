@@ -26,7 +26,7 @@ Reject with code `1` (`BAD_REQUEST`) when both `messages` and `items` are presen
 
 The connected account is the sender for every item.
 
-- `ton` — parse `address`, treat `amount` as nanocoins, attach `payload` and `stateInit` if present, use the bounce flag from the friendly-format address.
+- `ton` — parse `address`, treat `amount` as nanograms, attach `payload` and `stateInit` if present, use the bounce flag from the friendly-format address.
 - `jetton` — resolve the sender's jetton-wallet from `master` and the sender address; build the transfer body with opcode `0x0f8a7ea5` per [TEP-74](https://github.com/ton-blockchain/TEPs/blob/master/text/0074-jettons-standard.md); encode `forwardPayload` as `Either Cell ^Cell`; choose attached TON from `attachAmount` or wallet estimation; bounce enabled.
 - `nft` — build the transfer body with opcode `0x5fcc3d14` per [TEP-62](https://github.com/ton-blockchain/TEPs/blob/master/text/0062-nft-standard.md); encode `forwardPayload` with the same `Either Cell ^Cell` rule; choose attached TON from `attachAmount` or wallet estimation; bounce enabled.
 

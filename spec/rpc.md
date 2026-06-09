@@ -108,7 +108,7 @@ If `from` is provided, the wallet MUST NOT allow the user to change the sender a
 | Field            | Type           | Required | Description |
 |------------------|----------------|----------|-------------|
 | `address`        | string         | yes      | Destination in friendly format per [TEP-2](https://github.com/ton-blockchain/TEPs/blob/master/text/0002-address.md). |
-| `amount`         | decimal string | yes      | Nanocoins. |
+| `amount`         | decimal string | yes      | Nanograms. |
 | `payload`        | base64 string  | no       | Raw one-cell BoC. |
 | `stateInit`      | base64 string  | no       | Raw one-cell BoC. |
 | `extra_currency` | object         | no       | Map of extra currency ID to decimal string amount. |
@@ -133,7 +133,7 @@ Three item types are defined: `ton`, `jetton`, `nft`.
 |------------------|---------|----------|-------------|
 | `type`           | `"ton"` | yes      | Item discriminator. |
 | `address`        | string  | yes      | Destination address in friendly format. |
-| `amount`         | string  | yes      | Nanocoins as decimal string. |
+| `amount`         | string  | yes      | Nanograms as decimal string. |
 | `payload`        | string  | no       | Raw one-cell BoC in base64. |
 | `stateInit`      | string  | no       | Raw one-cell BoC in base64. |
 | `extra_currency` | object  | no       | Extra currency map (`currency_id -> amount` as decimal string). |
@@ -146,11 +146,11 @@ Three item types are defined: `ton`, `jetton`, `nft`.
 | `master`              | string     | yes      | Jetton master contract address. |
 | `destination`         | string     | yes      | Recipient address. |
 | `amount`              | string     | yes      | Jetton amount in elementary units. |
-| `attachAmount`        | string     | no       | TON value to attach for transfer execution. Wallet-calculated if omitted. |
+| `attachAmount`        | string     | no       | GRAM value to attach for transfer execution. Wallet-calculated if omitted. |
 | `queryId`             | string     | no       | Query ID for the transfer body. |
-| `responseDestination` | string     | no       | Address for the excess-TON refund. Defaults to the sender. |
+| `responseDestination` | string     | no       | Address for the excess-GRAM refund. Defaults to the sender. |
 | `customPayload`       | string     | no       | Raw one-cell BoC in base64. |
-| `forwardAmount`       | string     | no       | Nanocoins forwarded to the destination. Defaults to `"1"`. |
+| `forwardAmount`       | string     | no       | Nanograms forwarded to the destination. Defaults to `"1"`. |
 | `forwardPayload`      | string     | no       | Raw one-cell BoC in base64. |
 
 ##### `NftItem`
@@ -160,11 +160,11 @@ Three item types are defined: `ton`, `jetton`, `nft`.
 | `type`                | `"nft"` | yes      | Item discriminator. |
 | `nftAddress`          | string  | yes      | NFT item contract address. |
 | `newOwner`            | string  | yes      | New owner address. |
-| `attachAmount`        | string  | no       | TON value to attach for transfer execution. Wallet-calculated if omitted. |
+| `attachAmount`        | string  | no       | Grams value to attach for transfer execution. Wallet-calculated if omitted. |
 | `queryId`             | string  | no       | Query ID for the transfer body. |
-| `responseDestination` | string  | no       | Address for the excess-TON refund. Defaults to the sender. |
+| `responseDestination` | string  | no       | Address for the excess-Gram refund. Defaults to the sender. |
 | `customPayload`       | string  | no       | Raw one-cell BoC in base64. |
-| `forwardAmount`       | string  | no       | Nanocoins forwarded to the destination. Defaults to `"1"`. |
+| `forwardAmount`       | string  | no       | Nanograms forwarded to the destination. Defaults to `"1"`. |
 | `forwardPayload`      | string  | no       | Raw one-cell BoC in base64. |
 
 ### Response

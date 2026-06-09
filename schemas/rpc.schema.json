@@ -56,7 +56,7 @@
           "type": "string",
           "description": "Destination in friendly format per TEP-2. The bounceable flag is read from the address itself."
         },
-        "amount": { "$ref": "#/$defs/DecimalString", "description": "Nanocoins as a decimal string." },
+        "amount": { "$ref": "#/$defs/DecimalString", "description": "Nanograms as a decimal string." },
         "payload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
         "stateInit": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
         "extra_currency": { "$ref": "#/$defs/ExtraCurrency" }
@@ -65,13 +65,13 @@
 
     "TonItem": {
       "type": "object",
-      "description": "Structured TON transfer item. See `spec/rpc.md#tonitem`.",
+      "description": "Structured GRAM transfer item. See `spec/rpc.md#tonitem`.",
       "additionalProperties": false,
       "required": ["type", "address", "amount"],
       "properties": {
         "type": { "const": "ton" },
         "address": { "type": "string", "description": "Destination address in friendly format." },
-        "amount": { "$ref": "#/$defs/DecimalString", "description": "Nanocoins as a decimal string." },
+        "amount": { "$ref": "#/$defs/DecimalString", "description": "Nanograms as a decimal string." },
         "payload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
         "stateInit": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
         "extra_currency": { "$ref": "#/$defs/ExtraCurrency" }
@@ -87,11 +87,11 @@
         "master": { "type": "string", "description": "Jetton master contract address." },
         "destination": { "type": "string", "description": "Recipient address." },
         "amount": { "$ref": "#/$defs/DecimalString", "description": "Jetton amount in elementary units." },
-        "attachAmount": { "$ref": "#/$defs/DecimalString", "description": "TON value (nanocoins) to attach for transfer execution." },
+        "attachAmount": { "$ref": "#/$defs/DecimalString", "description": "GRAM value (nanograms) to attach for transfer execution." },
         "queryId": { "type": "string", "description": "Query ID for the transfer body." },
-        "responseDestination": { "type": "string", "description": "Address for the excess-TON refund." },
+        "responseDestination": { "type": "string", "description": "Address for the excess-GRAM refund." },
         "customPayload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
-        "forwardAmount": { "$ref": "#/$defs/DecimalString", "description": "Nanocoins forwarded to the destination." },
+        "forwardAmount": { "$ref": "#/$defs/DecimalString", "description": "Nanograms forwarded to the destination." },
         "forwardPayload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." }
       }
     },
@@ -104,11 +104,11 @@
         "type": { "const": "nft" },
         "nftAddress": { "type": "string", "description": "NFT item contract address." },
         "newOwner": { "type": "string", "description": "New owner address." },
-        "attachAmount": { "$ref": "#/$defs/DecimalString", "description": "TON value (nanocoins) to attach for transfer execution." },
+        "attachAmount": { "$ref": "#/$defs/DecimalString", "description": "GRAM value (nanograms) to attach for transfer execution." },
         "queryId": { "type": "string", "description": "Query ID for the transfer body." },
-        "responseDestination": { "type": "string", "description": "Address for the excess-TON refund." },
+        "responseDestination": { "type": "string", "description": "Address for the excess-GRAM refund." },
         "customPayload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." },
-        "forwardAmount": { "$ref": "#/$defs/DecimalString", "description": "Nanocoins forwarded to the destination." },
+        "forwardAmount": { "$ref": "#/$defs/DecimalString", "description": "Nanograms forwarded to the destination." },
         "forwardPayload": { "$ref": "#/$defs/Base64String", "description": "Raw one-cell BoC, base64-encoded." }
       }
     },
